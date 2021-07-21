@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Home from './pages/home';
+import AppContext from './lib/app-context';
+import AuthPage from './pages/auth-page';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
 export default function App(props) {
   const [user, setUser] = useState(null);
@@ -14,5 +17,24 @@ export default function App(props) {
   }, []);
 
   if (isAuthorizing) return null;
-  return <Home />;
+
+  const newContext = { user, handleSignIn };
+
+  return (
+    <AppContext.Provider value={newContext}>
+      <>
+        {/* Navbar component here */}
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              {user ? <Home /> : <Redirect to="/sign-in" />}
+            </Route>
+            <Route path="/sign-in">
+              <AuthPage />
+            </Route>
+          </Switch>
+        </Router>
+      </>
+    </AppContext.Provider>
+  );
 }
