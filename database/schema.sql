@@ -7,11 +7,11 @@ drop schema "public" cascade;
 create schema "public";
 
 CREATE TABLE "public"."users" (
-	"userID" serial NOT NULL,
+	"userId" serial NOT NULL,
 	"username" TEXT NOT NULL UNIQUE,
 	"refreshToken" TEXT NOT NULL,
-	"createdAt" timestamp with time zone NOT NULL,
-	CONSTRAINT "users_pk" PRIMARY KEY ("userID")
+	"createdAt" timestamp with time zone NOT NULL default now(),
+	CONSTRAINT "users_pk" PRIMARY KEY ("userId")
 ) WITH (
   OIDS=FALSE
 );
@@ -19,11 +19,11 @@ CREATE TABLE "public"."users" (
 
 
 CREATE TABLE "public"."subscriptions" (
-	"subscriptionID" serial NOT NULL,
-	"userID" integer NOT NULL,
+	"subscriptionId" serial NOT NULL,
+	"userId" integer NOT NULL,
 	"keywords" TEXT NOT NULL,
 	"subreddit" TEXT NOT NULL,
-	CONSTRAINT "subscriptions_pk" PRIMARY KEY ("subscriptionID")
+	CONSTRAINT "subscriptions_pk" PRIMARY KEY ("subscriptionId")
 ) WITH (
   OIDS=FALSE
 );
@@ -31,4 +31,4 @@ CREATE TABLE "public"."subscriptions" (
 
 
 
-ALTER TABLE "subscriptions" ADD CONSTRAINT "subscriptions_fk0" FOREIGN KEY ("userID") REFERENCES "users"("userID");
+ALTER TABLE "subscriptions" ADD CONSTRAINT "subscriptions_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
