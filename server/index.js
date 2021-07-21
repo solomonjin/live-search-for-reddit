@@ -109,7 +109,7 @@ app.get('/authorize', (req, res, next) => {
     })
     .catch(err => next(err));
 });
-app.listen(process.env.DEV_SERVER_PORT, () => {
+app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
-  console.log(`express server listening on port ${process.env.DEV_SERVER_PORT}`);
+  console.log(`express server listening on port ${process.env.PORT}`);
 });
