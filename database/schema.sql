@@ -16,9 +16,9 @@ CREATE TABLE "public"."users" (
   OIDS=FALSE
 );
 
-`
 
-CREATE TABLE "public.subscriptions" (
+
+CREATE TABLE "public"."subscriptions" (
 	"subscriptionID" serial NOT NULL,
 	"userID" integer NOT NULL,
 	"keywords" TEXT NOT NULL,
