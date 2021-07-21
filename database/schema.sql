@@ -19,8 +19,13 @@ CREATE TABLE "public"."users" (
 
 
 CREATE TABLE "public"."subscriptions" (
+<<<<<<< HEAD
 	"subscriptionId" serial NOT NULL,
 	"userId" integer NOT NULL,
+=======
+	"subscriptionID" serial NOT NULL,
+	"userID" integer NOT NULL,
+>>>>>>> e968f04cf105332706d240b3d1754725db66ce6c
 	"keywords" TEXT NOT NULL,
 	"subreddit" TEXT NOT NULL,
 	CONSTRAINT "subscriptions_pk" PRIMARY KEY ("subscriptionId")
