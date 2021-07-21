@@ -31,7 +31,7 @@ app.get('/api/auth', (req, res, next) => {
   if (!req.signedCookies.userToken) {
     payload = {
       user: null,
-      userID: null
+      userId: null
     };
   } else {
     payload = jwt.verify(req.signedCookies.userToken, process.env.TOKEN_SECRET);
@@ -39,7 +39,17 @@ app.get('/api/auth', (req, res, next) => {
   res.json(payload);
 });
 
+app.get('/api/sign-in', (req, res, next) => {
+  res.set('Access-Control-Allow-Origin', '*');
+  res.send(snoowrap.getAuthUrl({
+    clientId: process.env.CLIENT_ID,
+    scope: ['identity', 'privatemessages', 'read'],
+    redirectUri: 'http://localhost:3000/',
+    permanent: true
+  }));
+});
+
 app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
-  console.log(`express server listening on port ${process.env.PORT}`);
+  console.log(`express server listening on port ${process.env.DEV_SERVER_PORT}`);
 });
