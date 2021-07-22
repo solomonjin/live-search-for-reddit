@@ -6,10 +6,7 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const pg = require('pg');
 const snoowrap = require('snoowrap');
-const snoostorm = require('snoostorm');
 const ClientError = require('./client-error');
-// eslint-disable-next-line no-unused-vars
-const { SubmissionStream } = snoostorm;
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,

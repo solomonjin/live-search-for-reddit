@@ -8,7 +8,7 @@ const useStyles = makeStyles({
     background: '#f9f9f9',
     borderRadius: 8,
     color: '#393e41',
-  },
+  }
 });
 
 export default function MyPaper(props) {
