@@ -22,8 +22,6 @@ const app = express();
 
 app.use(staticMiddleware);
 
-app.use(errorMiddleware);
-
 app.use(express.json());
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -56,6 +54,7 @@ app.get('/api/authorize', (req, res, next) => {
   if (!code) {
     throw new ClientError(401, 'authorization error');
   }
+
   snoowrap.fromAuthCode({
     code,
     userAgent: 'keyword finder app v1.0 (by /u/buddhabab23',
@@ -111,6 +110,8 @@ app.get('/api/authorize', (req, res, next) => {
     })
     .catch(err => next(err));
 });
+
+app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console

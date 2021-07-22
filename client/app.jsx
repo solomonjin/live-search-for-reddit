@@ -42,7 +42,7 @@ export default function App(props) {
               {user ? <Home /> : <Redirect to="/sign-in" />}
             </Route>
             <Route path="/sign-in">
-              <AuthPage />
+              {!user ? <AuthPage /> : <Redirect to="/" />}
             </Route>
           </Switch>
         </Router>
