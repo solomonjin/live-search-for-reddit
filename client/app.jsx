@@ -16,6 +16,15 @@ export default function App(props) {
       });
   }, []);
 
+  const handleSignIn = event => {
+    event.preventDefault();
+    fetch('/api/sign-in')
+      .then(res => res.json())
+      .then(result => {
+        setUser(result.user);
+      });
+  };
+
   if (isAuthorizing) return null;
 
   const newContext = { user, handleSignIn };

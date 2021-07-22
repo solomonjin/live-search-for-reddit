@@ -9,6 +9,7 @@ const snoowrap = require('snoowrap');
 const snoostorm = require('snoostorm');
 const ClientError = require('./client-error');
 const { SubmissionStream } = snoostorm;
+const path = require('path');
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -109,6 +110,11 @@ app.get('/authorize', (req, res, next) => {
     })
     .catch(err => next(err));
 });
+
+app.get('/*', (req, res, next) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'));
+});
+
 app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`express server listening on port ${process.env.PORT}`);
