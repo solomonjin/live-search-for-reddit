@@ -1,6 +1,7 @@
 import React from 'react';
-import { Grid, Paper, Box } from '@material-ui/core';
+import { Grid, Box } from '@material-ui/core';
 import SignInButton from '../components/sign-in-button';
+import MyPaper from '../components/mypaper';
 
 export default function AuthPage(props) {
   return (
@@ -10,11 +11,11 @@ export default function AuthPage(props) {
           style={{ minHeight: '100vh' }}
     >
       <Grid item xs={9} sm={6} md={4}>
-        <Paper elevation={3}>
+        <MyPaper elevation={3}>
           <Box p={3}>
             <SignInButton />
           </Box>
-        </Paper>
+        </MyPaper>
       </Grid>
     </Grid>
   );

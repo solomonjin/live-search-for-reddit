@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 export default function App(props) {
   const [user, setUser] = useState(null);
   const [isAuthorizing, setIsAuthorizing] = useState(true);
+
   useEffect(() => {
     fetch('/api/auth')
       .then(res => res.json())
