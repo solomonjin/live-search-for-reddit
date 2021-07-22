@@ -29,12 +29,17 @@
     ]
   },
   "dependencies": {
+    "@material-ui/core": "^4.12.2",
+    "cookie-parser": "^1.4.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.6.0",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.2.0",
+    "snoostorm": "^1.5.2",
+    "snoowrap": "^1.23.0"
   },
   "devDependencies": {
     "@babel/core": "^7.14.6",
@@ -56,7 +61,7 @@
     "stylelint": "^13.13.1",
     "stylelint-config-recommended": "^5.0.0",
     "stylelint-config-standard": "^22.0.0",
-    "webpack": "^5.40.0",
+    "webpack": "^5.45.1",
     "webpack-cli": "^4.7.2",
     "webpack-dev-server": "^3.11.2"
   }
