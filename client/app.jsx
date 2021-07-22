@@ -12,7 +12,7 @@ export default function App(props) {
     fetch('/api/auth')
       .then(res => res.json())
       .then(result => {
-        setUser(result.user);
+        setUser(result.username);
         setIsAuthorizing(false);
       });
   }, []);
@@ -22,8 +22,10 @@ export default function App(props) {
     fetch('/api/sign-in')
       .then(res => res.json())
       .then(result => {
-        setUser(result.user);
-      });
+        const url = new URL(result);
+        window.location.replace(url);
+      })
+      .catch(err => console.error(err));
   };
 
   if (isAuthorizing) return null;

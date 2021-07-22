@@ -7,6 +7,7 @@ const useStyles = makeStyles({
   root: {
     background: '#f9f9f9',
     borderRadius: 8,
+    color: '#393e41',
   },
 });
 

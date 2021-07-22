@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Grid, Typography, makeStyles, Button, SvgIcon } from '@material-ui/core';
+import AppContext from '../lib/app-context';
 
 const useStyles = makeStyles({
   root: {
@@ -14,6 +15,7 @@ const useStyles = makeStyles({
 
 export default function SignInButton(props) {
   const classes = useStyles();
+  const { handleSignIn } = useContext(AppContext);
 
   const redditSVG = (
     <SvgIcon>
@@ -23,7 +25,8 @@ export default function SignInButton(props) {
         <path d="M32.1101 23.5659C32.1154 24.8454 30.9667 25.99 29.6751 25.9914C28.3315 25.9927 27.2322 24.8628 27.2309 23.4764C27.2295 22.2076 28.3622 21.0977 29.6618 21.0937C31.0001 21.0883 32.1034 22.2022 32.1101 23.5659Z" fill="#FF3F18" />
         <path d="M30.203 29.6659C30.4608 29.921 30.5329 30.307 30.2524 30.6315C29.9239 31.0095 29.5339 31.3621 29.1064 31.6185C27.9378 32.321 26.6462 32.6776 25.2918 32.8018C24.9045 32.8379 24.5185 32.8592 24.2808 32.8766C22.1023 32.8526 20.2191 32.3611 18.5442 31.1858C18.3478 31.0482 18.1635 30.8746 18.0259 30.6809C17.7828 30.3363 17.8136 29.9143 18.0566 29.6712C18.4266 29.2986 18.9088 29.2211 19.2935 29.4442C19.8104 29.746 20.3152 30.0839 20.8642 30.3123C23.5435 31.4275 26.1293 31.1924 28.6042 29.6886C28.7458 29.6031 28.8794 29.5003 29.0223 29.4161C29.3829 29.2104 29.8451 29.3106 30.203 29.6659Z" fill="#FF3F18" />
         <path d="M21.0524 23.5593C21.0577 24.7961 19.8944 25.9874 18.6803 25.9901C17.3019 25.9928 16.1586 24.8855 16.1546 23.5459C16.1519 22.2223 17.2725 21.0923 18.5881 21.0923C19.9211 21.0923 21.047 22.2183 21.0524 23.5593Z" fill="#FF3F18" />
-      </svg>    </SvgIcon>
+      </svg>
+    </SvgIcon>
   );
 
   return (
@@ -35,7 +38,7 @@ export default function SignInButton(props) {
         <Typography align='center' variant='h5'>{'This app requires authorization from the user\'s Reddit account'}</Typography>
       </Grid>
       <Grid item xs align="center">
-        <Button className={classes.root} startIcon={redditSVG}>
+        <Button className={classes.root} startIcon={redditSVG} onClick={handleSignIn}>
           SIGN IN
         </Button>
       </Grid>

@@ -8,8 +8,8 @@ const pg = require('pg');
 const snoowrap = require('snoowrap');
 const snoostorm = require('snoostorm');
 const ClientError = require('./client-error');
+// eslint-disable-next-line no-unused-vars
 const { SubmissionStream } = snoostorm;
-const path = require('path');
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -43,15 +43,15 @@ app.get('/api/auth', (req, res, next) => {
 
 app.get('/api/sign-in', (req, res, next) => {
   res.set('Access-Control-Allow-Origin', '*');
-  res.send(snoowrap.getAuthUrl({
+  res.json(snoowrap.getAuthUrl({
     clientId: process.env.CLIENT_ID,
     scope: ['identity', 'privatemessages', 'read'],
-    redirectUri: 'http://localhost:3000/authorize',
+    redirectUri: 'http://localhost:3000/api/authorize',
     permanent: true
   }));
 });
 
-app.get('/authorize', (req, res, next) => {
+app.get('/api/authorize', (req, res, next) => {
   const { code } = req.query;
   if (!code) {
     throw new ClientError(401, 'authorization error');
@@ -61,7 +61,7 @@ app.get('/authorize', (req, res, next) => {
     userAgent: 'keyword finder app v1.0 (by /u/buddhabab23',
     clientId: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    redirectUri: 'http://localhost:3000/authorize'
+    redirectUri: 'http://localhost:3000/api/authorize'
   })
     .then(requester => {
       return requester
@@ -101,18 +101,15 @@ app.get('/authorize', (req, res, next) => {
                   const token = jwt.sign(newUser, process.env.TOKEN_SECRET);
                   const cookieParams = {
                     httpOnly: true,
-                    signed: true
+                    signed: true,
+                    maxAge: 365 * 24 * 60 * 60 * 1000
                   };
-                  res.cookie('user-token', token, cookieParams).json(newUser);
+                  res.cookie('userToken', token, cookieParams).redirect('/');
                 });
             });
         });
     })
     .catch(err => next(err));
-});
-
-app.get('/*', (req, res, next) => {
-  res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 app.listen(process.env.PORT, () => {
