@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
+import { AppBar, Drawer, Hidden, Toolbar, Typography, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
@@ -22,7 +22,8 @@ const useStyles = makeStyles(theme => ({
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth
     },
-    background: 'linear-gradient(rgba(163, 216, 247, 0.5) 30%, rgba(197, 207, 243, 0.5) 90%)'
+    background: 'linear-gradient(rgba(163, 216, 247, 0.5) 30%, rgba(197, 207, 243, 0.5) 90%)',
+    backgroundFilter: 'blur(3px)'
   },
   menuButton: {
     [theme.breakpoints.up('sm')]: {
@@ -31,7 +32,8 @@ const useStyles = makeStyles(theme => ({
   },
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
-    width: drawerWidth
+    width: drawerWidth,
+    background: '#f9f9f9'
   },
   content: {
     flexGrow: 1,
@@ -85,7 +87,14 @@ export default function Navbar(props) {
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer}>
-        <MyDrawer />
+        <Drawer
+          variant="permanent"
+          classes={{
+            paper: classes.drawerPaper
+          }}
+          open>
+          <MyDrawer />
+        </Drawer>
       </nav>
     </div>
   );
