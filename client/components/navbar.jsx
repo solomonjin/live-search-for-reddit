@@ -87,15 +87,31 @@ export default function Navbar(props) {
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer}>
-        <Drawer
-          variant="permanent"
-          classes={{
-            paper: classes.drawerPaper
-          }}
-          open>
-          <MyDrawer />
-        </Drawer>
+        <Hidden smUp implementation="css">
+          <Drawer
+            variant="temporary"
+            classes={{
+              paper: classes.drawerPaper
+            }}
+            open={drawerOpen}
+            onClose={toggleDrawer}
+            ModalProps={{ keepMounted: true }}
+          >
+            <MyDrawer />
+          </Drawer>
+        </Hidden>
+        <Hidden xsDown implementation="css">
+          <Drawer
+            classes={{ paper: classes.drawerPaper }}
+            variant="permanent"
+          >
+            <MyDrawer />
+          </Drawer>
+        </Hidden>
       </nav>
+      <main className={classes.content}>
+        {props.children}
+      </main>
     </div>
   );
 }

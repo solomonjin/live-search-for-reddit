@@ -34,8 +34,7 @@ export default function App(props) {
 
   return (
     <AppContext.Provider value={newContext}>
-      <>
-        <Navbar />
+      <Navbar>
         <Router>
           <Switch>
             <Route exact path="/">
@@ -46,7 +45,7 @@ export default function App(props) {
             </Route>
           </Switch>
         </Router>
-      </>
+      </Navbar>
     </AppContext.Provider>
   );
 }

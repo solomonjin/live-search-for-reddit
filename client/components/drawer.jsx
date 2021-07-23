@@ -16,8 +16,7 @@ const useStyles = makeStyles(theme => ({
   paper: {
     width: '90%',
     borderRadius: 20
-  },
-  toolbar: theme.mixins.toolbar
+  }
 }));
 
 export default function MyDrawer(props) {
