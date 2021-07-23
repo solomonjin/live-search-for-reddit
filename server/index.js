@@ -2,6 +2,7 @@ require('dotenv/config');
 const express = require('express');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
+const authorizationMiddleware = require('./authorization-middleware');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const pg = require('pg');
@@ -107,6 +108,8 @@ app.get('/api/authorize', (req, res, next) => {
     })
     .catch(err => next(err));
 });
+
+app.use(authorizationMiddleware);
 
 app.use(errorMiddleware);
 
