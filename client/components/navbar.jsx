@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { AppBar, Drawer, Hidden, Divider, Toolbar, Typography, IconButton } from '@material-ui/core';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
+import SearchIcon from '@material-ui/icons/Search';
+import MyDrawer from './drawer';
 
 const drawerWidth = 240;
 
@@ -34,6 +36,12 @@ const useStyles = makeStyles(theme => ({
   content: {
     flexGrow: 1,
     padding: '20px'
+  },
+  typography: {
+    color: '#393e41'
+  },
+  justifyBetween: {
+    justifyContent: 'space-between'
   }
 }));
 
@@ -63,16 +71,22 @@ export default function Navbar(props) {
   return (
     <div className={classes.root}>
       <AppBar className={classes.appBar} position="fixed">
-        <Toolbar>
+        <Toolbar className={classes.justifyBetween}>
           <IconButton
             onClick={toggleDrawer}
             className={classes.menuButton}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>{currentPage}</Typography>
+          <Typography className={classes.typography} variant="h6" noWrap>{currentPage}</Typography>
+          <IconButton>
+            <SearchIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
+      <nav className={classes.drawer}>
+        <MyDrawer />
+      </nav>
     </div>
   );
 }
