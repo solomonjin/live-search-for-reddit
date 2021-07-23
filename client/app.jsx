@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Home from './pages/home';
+import { Home, AuthPage } from './pages';
 import AppContext from './lib/app-context';
-import AuthPage from './pages/auth-page';
+import Navbar from './components/navbar';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
 export default function App(props) {
@@ -35,7 +35,7 @@ export default function App(props) {
   return (
     <AppContext.Provider value={newContext}>
       <>
-        {/* Navbar component here */}
+        <Navbar />
         <Router>
           <Switch>
             <Route exact path="/">
