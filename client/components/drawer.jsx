@@ -38,7 +38,7 @@ export default function MyDrawer(props) {
               </Grid>
               <Grid item xs align="center">
                 <Typography align='center' noWrap variant='caption'>
-                  {user ? `u/${user.user}` : 'Not Signed In'}
+                  {user ? `u/${user}` : 'Not Signed In'}
                 </Typography>
               </Grid>
             </Grid>
