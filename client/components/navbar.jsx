@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { AppBar, Drawer, Hidden, Toolbar, Typography, IconButton } from '@material-ui/core';
+import React, { useState } from 'react';
+import { AppBar, Drawer, Hidden, Toolbar, IconButton, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import MyDrawer from './drawer';
+import { useLocation } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -50,21 +51,16 @@ const useStyles = makeStyles(theme => ({
 export default function Navbar(props) {
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState('');
+  const location = useLocation();
 
-  useEffect(() => {
-    const getCurrentRoute = event => {
-      const hrefArray = window.location.href.split('/');
-      const route = hrefArray[hrefArray.length - 1].split('-');
-      setCurrentPage(route.map(el => el[0].toUpperCase() + el.slice(1)).join(' '));
-    };
+  const parsePath = path => {
+    const pathName = path.split('/')[1];
+    return pathName[0].toUpperCase() + pathName.slice(1);
+  };
 
-    window.addEventListener('popstate', getCurrentRoute);
-
-    return () => {
-      window.removeEventListener('popstate', getCurrentRoute);
-    };
-  }, []);
+  const currentPage = location.pathname === '/'
+    ? 'Home'
+    : parsePath(location.pathname);
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);

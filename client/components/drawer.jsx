@@ -38,7 +38,7 @@ export default function MyDrawer(props) {
               </Grid>
               <Grid item xs align="center">
                 <Typography align='center' noWrap variant='caption'>
-                  {user.user ? `u/${user.user}` : 'Not Signed In'}
+                  {user ? `u/${user.user}` : 'Not Signed In'}
                 </Typography>
               </Grid>
             </Grid>
@@ -63,8 +63,8 @@ export default function MyDrawer(props) {
       </ListItem>
       <Divider />
       <ListItem button>
-        <ListItemIcon>{user.user ? <LogoutIcon /> : <LoginIcon />}</ListItemIcon>
-        <ListItemText primary={user.user ? 'Sign Out' : 'Sign In'} />
+        <ListItemIcon>{user ? <LogoutIcon /> : <LoginIcon />}</ListItemIcon>
+        <ListItemText primary={user ? 'Sign Out' : 'Sign In'} />
       </ListItem>
     </List>
   </>);

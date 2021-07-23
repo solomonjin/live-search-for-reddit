@@ -34,8 +34,8 @@ export default function App(props) {
 
   return (
     <AppContext.Provider value={newContext}>
-      <Navbar>
-        <Router>
+      <Router>
+        <Navbar>
           <Switch>
             <Route exact path="/">
               {user ? <Home /> : <Redirect to="/sign-in" />}
@@ -44,8 +44,8 @@ export default function App(props) {
               {!user ? <AuthPage /> : <Redirect to="/" />}
             </Route>
           </Switch>
-        </Router>
-      </Navbar>
+        </Navbar>
+      </Router>
     </AppContext.Provider>
   );
 }
