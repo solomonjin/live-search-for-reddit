@@ -124,7 +124,6 @@ app.use('/api/search', (req, res, next) => {
      where "userId" = $1;
   `;
   const params = [req.user.userId];
-
   db.query(sql, params)
     .then(result => {
       const [user] = result.rows;
@@ -145,7 +144,7 @@ app.use('/api/search', (req, res, next) => {
       const parsedKw = parseKeywords(keywords);
 
       submissions.on('item', submission => {
-        if (parsedKw.some(word => submission.includes(word))) {
+        if (parsedKw.some(word => submission.title.toLowerCase().includes(word.toLowerCase()))) {
           submissionsList.push(submission);
         }
         if (submissionsList.length >= 10) submissions.end();
