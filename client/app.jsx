@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Home, AuthPage } from './pages';
+import { Home, AuthPage, Search } from './pages';
 import AppContext from './lib/app-context';
 import Navbar from './components/navbar';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { Fade } from '@material-ui/core';
 
 const theme = createTheme({
   palette: {
@@ -49,14 +50,19 @@ export default function App(props) {
       <AppContext.Provider value={newContext}>
         <Router>
           <Navbar>
-            <Switch>
-              <Route exact path="/">
-                {user ? <Home /> : <Redirect to="/sign-in" />}
-              </Route>
-              <Route path="/sign-in">
-                {!user ? <AuthPage /> : <Redirect to="/" />}
-              </Route>
-            </Switch>
+            <Fade>
+              <Switch>
+                <Route exact path="/">
+                  {user ? <Home /> : <Redirect to="/sign-in" />}
+                </Route>
+                <Route path="/sign-in">
+                  {!user ? <AuthPage /> : <Redirect to="/" />}
+                </Route>
+                <Route path="/search">
+                  {user ? <Search /> : <Redirect to="/sign-in" />}
+                </Route>
+              </Switch>
+            </Fade>
           </Navbar>
         </Router>
       </AppContext.Provider>
