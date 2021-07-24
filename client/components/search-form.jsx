@@ -58,7 +58,12 @@ export default function SearchForm(props) {
 
   const handleSubmit = event => {
     event.preventDefault();
-    console.log(event);
+    const userInputs = {
+      keywords,
+      subs,
+      toggleInbox
+    };
+    console.log(userInputs);
   };
 
   const changeKeywords = event => {
