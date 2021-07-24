@@ -24,7 +24,7 @@ export default function SearchMessage(props) {
       justifyContent="center"
     >
       <Grid item xs={12}>
-        <Typography align='center' variant='h5'>{'No Search active'}</Typography>
+        <Typography align='center' variant='h5'>{'No search active'}</Typography>
       </Grid>
       <Grid item xs align="center">
         <Button className={classes.root} startIcon={<SearchIcon />} onClick={toggleSearchForm}>
