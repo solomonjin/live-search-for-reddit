@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { AppBar, Drawer, Hidden, Toolbar, IconButton, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
 import MyDrawer from './drawer';
+import SearchForm from './search-form';
 import { useLocation } from 'react-router-dom';
 
 const drawerWidth = 240;
@@ -23,8 +23,9 @@ const useStyles = makeStyles(theme => ({
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth
     },
-    background: 'linear-gradient(rgba(163, 216, 247, 0.5) 30%, rgba(197, 207, 243, 0.5) 90%)',
-    backgroundFilter: 'blur(3px)'
+    background: 'linear-gradient(rgba(197, 207, 243, 0.5) 20%, rgba(163, 216, 247, 0.5) 90%)',
+    backdropFilter: 'blur(6px)',
+    WebkitBackdropFilter: 'blur(6px)'
   },
   menuButton: {
     [theme.breakpoints.up('sm')]: {
@@ -77,9 +78,8 @@ export default function Navbar(props) {
             <MenuIcon />
           </IconButton>
           <Typography className={classes.typography} variant="h6" noWrap>{currentPage}</Typography>
-          <IconButton>
-            <SearchIcon />
-          </IconButton>
+          {/* Search Icon + Form drawer below */}
+          <SearchForm />
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer}>
