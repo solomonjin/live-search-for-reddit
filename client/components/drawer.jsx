@@ -24,6 +24,11 @@ export default function MyDrawer(props) {
   const classes = useStyles();
   const { user } = useContext(AppContext);
 
+  const handleClick = event => {
+    if (!props.toggleDrawer) return;
+    props.toggleDrawer();
+  };
+
   return (
   <>
     <Box p={1} pt={2}>
@@ -48,7 +53,7 @@ export default function MyDrawer(props) {
       </Grid>
     </Box>
     <List>
-      <ListItem button component={Link} to='/'>
+      <ListItem button component={Link} to='/' onClick={handleClick}>
         <ListItemIcon><HomeIcon /></ListItemIcon>
         <ListItemText primary="Home" />
       </ListItem>
@@ -58,12 +63,12 @@ export default function MyDrawer(props) {
         <ListItemText primary="Inbox" />
       </ListItem>
       <Divider />
-      <ListItem button component={Link} to='/search'>
+      <ListItem button component={Link} to='/search' onClick={handleClick}>
         <ListItemIcon><SearchIcon /></ListItemIcon>
         <ListItemText primary="Search" />
       </ListItem>
       <Divider />
-      <ListItem button>
+      <ListItem button onClick={handleClick}>
         <ListItemIcon>{user ? <LogoutIcon /> : <LoginIcon />}</ListItemIcon>
         <ListItemText primary={user ? 'Sign Out' : 'Sign In'} />
       </ListItem>

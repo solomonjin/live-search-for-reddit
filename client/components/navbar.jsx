@@ -93,7 +93,7 @@ export default function Navbar(props) {
             onClose={toggleDrawer}
             ModalProps={{ keepMounted: true }}
           >
-            <MyDrawer />
+            <MyDrawer toggleDrawer={toggleDrawer}/>
           </Drawer>
         </Hidden>
         <Hidden xsDown implementation="css">
