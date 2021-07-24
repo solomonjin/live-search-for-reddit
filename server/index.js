@@ -147,7 +147,7 @@ app.post('/api/search', (req, res, next) => {
         if (parsedKw.some(word => submission.title.toLowerCase().includes(word.toLowerCase()))) {
           submissionsList.push(submission);
         }
-        if (submissionsList.length >= 10) submissions.end();
+        if (submissionsList.length >= 5) submissions.end();
       });
 
       submissions.on('end', function submissionEnd() {

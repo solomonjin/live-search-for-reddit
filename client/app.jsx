@@ -82,6 +82,7 @@ export default function App(props) {
       .then(res => res.json())
       .then(results => {
         history.push('/search');
+        event.target.reset();
         closeSearchForm();
         setSearchResults(results);
       })
