@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   IconButton, TextField, Grid, ClickAwayListener,
   FormControlLabel, Slide, makeStyles, Button,
   Switch
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
+import AppContext from '../lib/app-context';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -42,9 +43,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function SearchForm(props) {
   const [isOpen, setOpen] = useState(false);
-  const [keywords, setKeywords] = useState('');
-  const [subs, setSubs] = useState('');
-  const [toggleInbox, setToggleInbox] = useState(false);
+  const { handleSubmit, changeKeywords, changeSubs, changeInbox, toggleInbox } = useContext(AppContext);
 
   const classes = useStyles();
 
@@ -54,28 +53,6 @@ export default function SearchForm(props) {
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const handleSubmit = event => {
-    event.preventDefault();
-    const userInputs = {
-      keywords,
-      subs,
-      toggleInbox
-    };
-    console.log(userInputs);
-  };
-
-  const changeKeywords = event => {
-    setKeywords(event.target.value);
-  };
-
-  const changeSubs = event => {
-    setSubs(event.target.value);
-  };
-
-  const changeInbox = event => {
-    setToggleInbox(!toggleInbox);
   };
 
   return (

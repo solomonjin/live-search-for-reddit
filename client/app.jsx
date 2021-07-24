@@ -19,6 +19,10 @@ const theme = createTheme({
 export default function App(props) {
   const [user, setUser] = useState(null);
   const [isAuthorizing, setIsAuthorizing] = useState(true);
+  const [searchResults, setSearchResults] = useState(null);
+  const [keywords, setKeywords] = useState('');
+  const [subs, setSubs] = useState('');
+  const [toggleInbox, setToggleInbox] = useState(false);
 
   useEffect(() => {
     fetch('/api/auth')
@@ -40,9 +44,39 @@ export default function App(props) {
       .catch(err => console.error(err));
   };
 
+  const changeKeywords = event => {
+    setKeywords(event.target.value);
+  };
+
+  const changeSubs = event => {
+    setSubs(event.target.value);
+  };
+
+  const changeInbox = event => {
+    setToggleInbox(!toggleInbox);
+  };
+
+  const handleSubmit = event => {
+    event.preventDefault();
+    const userInputs = {
+      keywords,
+      subs,
+      toggleInbox
+    };
+    console.log(userInputs);
+  };
+
   if (isAuthorizing) return null;
 
-  const newContext = { user, handleSignIn };
+  const newContext = {
+    user,
+    handleSignIn,
+    changeKeywords,
+    changeSubs,
+    changeInbox,
+    handleSubmit,
+    toggleInbox
+  };
 
   return (
     <ThemeProvider theme={theme}>
