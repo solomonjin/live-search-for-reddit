@@ -24,6 +24,7 @@ export default function App(props) {
   const [subreddits, setSubs] = useState('');
   const [toggleInbox, setToggleInbox] = useState(false);
   const [searchFormOpen, setSearchFormOpen] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -68,6 +69,8 @@ export default function App(props) {
 
   const submitSearch = event => {
     event.preventDefault();
+    setIsSearching(true);
+    closeSearchForm();
     const userInputs = {
       keywords,
       subreddits,
@@ -83,7 +86,7 @@ export default function App(props) {
       .then(results => {
         history.push('/search');
         event.target.reset();
-        closeSearchForm();
+        setIsSearching(false);
         setSearchResults(results);
       })
       .catch(err => console.error(err));
@@ -102,7 +105,8 @@ export default function App(props) {
     searchResults,
     openSearchForm,
     closeSearchForm,
-    searchFormOpen
+    searchFormOpen,
+    isSearching
   };
 
   return (
