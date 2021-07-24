@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import {
   IconButton, TextField, Grid, ClickAwayListener,
-  FormControl, Slide, makeStyles, Button
+  FormControl, FormControlLabel, Slide, makeStyles, Button,
+  Switch
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 
@@ -31,6 +32,11 @@ const useStyles = makeStyles(theme => ({
     background: 'linear-gradient(45deg, #A3D8F7 30%, #C5CFF3 90%)',
     boxShadow: '0 3px 5px 2px rgba(197, 207, 243, .3)',
     color: '#393E41'
+  },
+  switch: {
+    palette: {
+      primary: '#A3D8F7'
+    }
   }
 }));
 
@@ -51,7 +57,6 @@ export default function SearchForm(props) {
   };
 
   const handleSubmit = event => {
-    event.preventDefault();
     console.log(event);
   };
 
@@ -61,6 +66,10 @@ export default function SearchForm(props) {
 
   const changeSubs = event => {
     setSubs(event.target.value);
+  };
+
+  const changeInbox = event => {
+    setToggleInbox(!toggleInbox);
   };
 
   return (
@@ -89,7 +98,9 @@ export default function SearchForm(props) {
                         onChange={changeSubs} />
                     </Grid>
                     <Grid item xs={12}>
-
+                      <FormControlLabel
+                        control={<Switch color="primary" className={classes.switch} checked={toggleInbox} onChange={changeInbox} name="inboxSetting" />}
+                        label="Send to Inbox" />
                     </Grid>
                   </Grid>
                 </Grid>

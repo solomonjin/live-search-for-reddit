@@ -3,6 +3,18 @@ import { Home, AuthPage } from './pages';
 import AppContext from './lib/app-context';
 import Navbar from './components/navbar';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#a3d8f7'
+    },
+    secondary: {
+      main: '#ff4300'
+    }
+  }
+});
 
 export default function App(props) {
   const [user, setUser] = useState(null);
@@ -33,19 +45,21 @@ export default function App(props) {
   const newContext = { user, handleSignIn };
 
   return (
-    <AppContext.Provider value={newContext}>
-      <Router>
-        <Navbar>
-          <Switch>
-            <Route exact path="/">
-              {user ? <Home /> : <Redirect to="/sign-in" />}
-            </Route>
-            <Route path="/sign-in">
-              {!user ? <AuthPage /> : <Redirect to="/" />}
-            </Route>
-          </Switch>
-        </Navbar>
-      </Router>
-    </AppContext.Provider>
+    <ThemeProvider theme={theme}>
+      <AppContext.Provider value={newContext}>
+        <Router>
+          <Navbar>
+            <Switch>
+              <Route exact path="/">
+                {user ? <Home /> : <Redirect to="/sign-in" />}
+              </Route>
+              <Route path="/sign-in">
+                {!user ? <AuthPage /> : <Redirect to="/" />}
+              </Route>
+            </Switch>
+          </Navbar>
+        </Router>
+      </AppContext.Provider>
+    </ThemeProvider>
   );
 }
