@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import {
   IconButton, TextField, Grid, ClickAwayListener,
   FormControlLabel, Slide, makeStyles, Button,
@@ -42,29 +42,29 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function SearchForm(props) {
-  const [isOpen, setOpen] = useState(false);
-  const { handleSubmit, changeKeywords, changeSubs, changeInbox, toggleInbox } = useContext(AppContext);
+  const {
+    submitSearch,
+    changeKeywords,
+    changeSubs,
+    changeInbox,
+    toggleInbox,
+    openSearchForm,
+    closeSearchForm,
+    searchFormOpen
+  } = useContext(AppContext);
 
   const classes = useStyles();
 
-  const handleOpen = () => {
-    setOpen(!isOpen);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
-    <ClickAwayListener onClickAway={handleClose}>
+    <ClickAwayListener onClickAway={closeSearchForm}>
       <div>
-        <IconButton onClick={handleOpen}>
+        <IconButton onClick={openSearchForm}>
           <SearchIcon />
         </IconButton>
 
-        <Slide direction="down" in={isOpen} mountOnEnter>
+        <Slide direction="down" in={searchFormOpen} mountOnEnter>
           <div className={classes.root}>
-            <form className={classes.form} onSubmit={handleSubmit}>
+            <form className={classes.form} onSubmit={submitSearch}>
               <Grid container spacing={3} alignItems="center" justifyContent="space-evenly">
                 <Grid item xs={12} sm={10} align="center">
                   <Grid container spacing={2}>

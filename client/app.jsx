@@ -23,6 +23,7 @@ export default function App(props) {
   const [keywords, setKeywords] = useState('');
   const [subreddits, setSubs] = useState('');
   const [toggleInbox, setToggleInbox] = useState(false);
+  const [searchFormOpen, setSearchFormOpen] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -45,6 +46,14 @@ export default function App(props) {
       .catch(err => console.error(err));
   };
 
+  const openSearchForm = () => {
+    setSearchFormOpen(!searchFormOpen);
+  };
+
+  const closeSearchForm = () => {
+    setSearchFormOpen(false);
+  };
+
   const changeKeywords = event => {
     setKeywords(event.target.value);
   };
@@ -57,7 +66,7 @@ export default function App(props) {
     setToggleInbox(!toggleInbox);
   };
 
-  const handleSubmit = event => {
+  const submitSearch = event => {
     event.preventDefault();
     const userInputs = {
       keywords,
@@ -73,6 +82,7 @@ export default function App(props) {
       .then(res => res.json())
       .then(results => {
         history.push('/search');
+        closeSearchForm();
         setSearchResults(results);
       })
       .catch(err => console.error(err));
@@ -86,9 +96,12 @@ export default function App(props) {
     changeKeywords,
     changeSubs,
     changeInbox,
-    handleSubmit,
+    submitSearch,
     toggleInbox,
-    searchResults
+    searchResults,
+    openSearchForm,
+    closeSearchForm,
+    searchFormOpen
   };
 
   return (
