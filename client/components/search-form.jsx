@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   IconButton, TextField, Grid, ClickAwayListener,
-  FormControl, FormControlLabel, Slide, makeStyles, Button,
+  FormControlLabel, Slide, makeStyles, Button,
   Switch
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     display: 'flex',
     alignItems: 'center',
-    height: 375,
+    height: 300,
     width: '100%',
     padding: '30px 10px',
     boxShadow: '0 2px 3px 2px rgba(0, 0, 0, 0.2)',
@@ -57,6 +57,7 @@ export default function SearchForm(props) {
   };
 
   const handleSubmit = event => {
+    event.preventDefault();
     console.log(event);
   };
 
@@ -81,7 +82,7 @@ export default function SearchForm(props) {
 
         <Slide direction="down" in={isOpen} mountOnEnter>
           <div className={classes.root}>
-            <FormControl className={classes.form} onSubmit={handleSubmit}>
+            <form className={classes.form} onSubmit={handleSubmit}>
               <Grid container spacing={3} alignItems="center" justifyContent="space-evenly">
                 <Grid item xs={12} sm={10} align="center">
                   <Grid container spacing={2}>
@@ -107,13 +108,13 @@ export default function SearchForm(props) {
 
                 <Grid item xs={12} sm={1} align="end">
                   <Grid container justifyContent="center">
-                    <Button className={classes.button}>
+                    <Button className={classes.button} type="submit">
                       Search
                     </Button>
                   </Grid>
                 </Grid>
               </Grid>
-            </FormControl>
+            </form>
           </div>
         </Slide>
       </div>
