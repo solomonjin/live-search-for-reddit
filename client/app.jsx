@@ -21,7 +21,7 @@ export default function App(props) {
   const [isAuthorizing, setIsAuthorizing] = useState(true);
   const [searchResults, setSearchResults] = useState(null);
   const [keywords, setKeywords] = useState('');
-  const [subs, setSubs] = useState('');
+  const [subreddits, setSubs] = useState('');
   const [toggleInbox, setToggleInbox] = useState(false);
 
   useEffect(() => {
@@ -60,8 +60,8 @@ export default function App(props) {
     event.preventDefault();
     const userInputs = {
       keywords,
-      subs,
-      toggleInbox
+      subreddits,
+      sendToInbox: toggleInbox
     };
     console.log(userInputs);
   };
