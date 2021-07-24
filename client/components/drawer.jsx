@@ -11,6 +11,7 @@ import LoginIcon from '@material-ui/icons/Login';
 import LogoutIcon from '@material-ui/icons/Logout';
 import { makeStyles } from '@material-ui/core/styles';
 import AppContext from '../lib/app-context';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -47,7 +48,7 @@ export default function MyDrawer(props) {
       </Grid>
     </Box>
     <List>
-      <ListItem button>
+      <ListItem button component={Link} to='/'>
         <ListItemIcon><HomeIcon /></ListItemIcon>
         <ListItemText primary="Home" />
       </ListItem>
@@ -57,7 +58,7 @@ export default function MyDrawer(props) {
         <ListItemText primary="Inbox" />
       </ListItem>
       <Divider />
-      <ListItem button>
+      <ListItem button component={Link} to='/search'>
         <ListItemIcon><SearchIcon /></ListItemIcon>
         <ListItemText primary="Search" />
       </ListItem>

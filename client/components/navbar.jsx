@@ -24,8 +24,8 @@ const useStyles = makeStyles(theme => ({
       marginLeft: drawerWidth
     },
     background: 'linear-gradient(rgba(197, 207, 243, 0.5) 20%, rgba(163, 216, 247, 0.5) 90%)',
-    backdropFilter: 'blur(6px)',
-    WebkitBackdropFilter: 'blur(6px)'
+    backdropFilter: 'blur(2px)',
+    WebkitBackdropFilter: 'blur(2px)'
   },
   menuButton: {
     [theme.breakpoints.up('sm')]: {
