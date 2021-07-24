@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Home, AuthPage, Search } from './pages';
 import AppContext from './lib/app-context';
 import Navbar from './components/navbar';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 
 const theme = createTheme({
@@ -23,6 +23,7 @@ export default function App(props) {
   const [keywords, setKeywords] = useState('');
   const [subreddits, setSubs] = useState('');
   const [toggleInbox, setToggleInbox] = useState(false);
+  const history = useHistory();
 
   useEffect(() => {
     fetch('/api/auth')
@@ -63,7 +64,18 @@ export default function App(props) {
       subreddits,
       sendToInbox: toggleInbox
     };
-    console.log(userInputs);
+    const req = {
+      method: 'post',
+      body: JSON.stringify(userInputs),
+      headers: { 'Content-Type': 'application/json' }
+    };
+    fetch('/api/search', req)
+      .then(res => res.json())
+      .then(results => {
+        history.push('/search');
+        setSearchResults(results);
+      })
+      .catch(err => console.error(err));
   };
 
   if (isAuthorizing) return null;
@@ -75,27 +87,26 @@ export default function App(props) {
     changeSubs,
     changeInbox,
     handleSubmit,
-    toggleInbox
+    toggleInbox,
+    searchResults
   };
 
   return (
     <ThemeProvider theme={theme}>
       <AppContext.Provider value={newContext}>
-        <Router>
-          <Navbar>
-            <Switch>
-              <Route exact path="/">
-                {user ? <Home /> : <Redirect to="/sign-in" />}
-              </Route>
-              <Route path="/sign-in">
-                {!user ? <AuthPage /> : <Redirect to="/" />}
-              </Route>
-              <Route path="/search">
-                {user ? <Search /> : <Redirect to="/sign-in" />}
-              </Route>
-            </Switch>
-          </Navbar>
-        </Router>
+        <Navbar>
+          <Switch>
+            <Route exact path="/">
+              {user ? <Home /> : <Redirect to="/sign-in" />}
+            </Route>
+            <Route path="/sign-in">
+              {!user ? <AuthPage /> : <Redirect to="/" />}
+            </Route>
+            <Route path="/search">
+              {user ? <Search /> : <Redirect to="/sign-in" />}
+            </Route>
+          </Switch>
+        </Navbar>
       </AppContext.Provider>
     </ThemeProvider>
   );

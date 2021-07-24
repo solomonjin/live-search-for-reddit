@@ -112,7 +112,7 @@ app.get('/api/authorize', (req, res, next) => {
 
 app.use(authorizationMiddleware);
 
-app.use('/api/search', (req, res, next) => {
+app.post('/api/search', (req, res, next) => {
   const { keywords, subreddits, sendToInbox } = req.body;
   if (!keywords || !subreddits || sendToInbox === null) {
     throw new ClientError(400, 'missing search terms');
