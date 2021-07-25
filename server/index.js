@@ -6,16 +6,9 @@ const authorizationMiddleware = require('./authorization-middleware');
 const { createSearchStream, parseKeywords } = require('./createSearchStream');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
-const pg = require('pg');
 const Snoowrap = require('snoowrap');
 const ClientError = require('./client-error');
-
-const db = new pg.Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
+const db = require('./db');
 
 const app = express();
 
@@ -118,43 +111,28 @@ app.post('/api/search', (req, res, next) => {
     throw new ClientError(400, 'missing search terms');
   }
 
-  const sql = `
-    select *
-      from "users"
-     where "userId" = $1;
-  `;
-  const params = [req.user.userId];
-  db.query(sql, params)
-    .then(result => {
-      const [user] = result.rows;
-      if (!user) {
-        throw new ClientError(401, 'user not found');
-      }
-      const r = new Snoowrap({
-        userAgent: 'keyword finder app v1.0 (by /u/buddhababy23)',
-        clientId: process.env.CLIENT_ID,
-        clientSecret: process.env.CLIENT_SECRET,
-        refreshToken: user.refreshToken
-      });
+  const r = new Snoowrap({
+    userAgent: 'keyword finder app v1.0 (by /u/buddhababy23)',
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    refreshToken: req.user.refreshToken
+  });
 
-      const { keywords, subreddits } = req.body;
-      const submissions = createSearchStream(r, subreddits);
+  const submissions = createSearchStream(r, subreddits);
 
-      const submissionsList = [];
-      const parsedKw = parseKeywords(keywords);
+  const submissionsList = [];
+  const parsedKw = parseKeywords(keywords);
 
-      submissions.on('item', submission => {
-        if (parsedKw.some(word => submission.title.toLowerCase().includes(word.toLowerCase()))) {
-          submissionsList.push(submission);
-        }
-        if (submissionsList.length >= 5) submissions.end();
-      });
+  submissions.on('item', submission => {
+    if (parsedKw.some(word => submission.title.toLowerCase().includes(word.toLowerCase()))) {
+      submissionsList.push(submission);
+    }
+    if (submissionsList.length >= 5) submissions.end();
+  });
 
-      submissions.on('end', function submissionEnd() {
-        res.json(submissionsList);
-      });
-    })
-    .catch(err => next(err));
+  submissions.on('end', function submissionEnd() {
+    res.json(submissionsList);
+  });
 });
 
 app.use(errorMiddleware);
@@ -163,3 +141,5 @@ app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`express server listening on port ${process.env.PORT}`);
 });
+
+module.exports = db;

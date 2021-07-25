@@ -49,7 +49,7 @@ export default function Search(props) {
     );
   }
 
-  const submissions = searchResults
+  const submissions = searchResults !== null
     ? (<Grid container spacing={3}>
       {searchResults.map(post =>
         <Grid item sm={12} md={6} key={post.id}>
