@@ -7,6 +7,8 @@ import InsertCommentIcon from '@material-ui/icons/InsertComment';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import DeleteIcon from '@material-ui/icons/Delete';
 import formatDate from '../lib/format-date';
+import Highlighter from 'react-highlight-words';
+import { parseKeywords } from '../../server/createSearchStream';
 
 const useStyles = makeStyles({
   root: {
@@ -17,6 +19,10 @@ const useStyles = makeStyles({
   },
   subtext: {
     opacity: '50%'
+  },
+  highlight: {
+    color: '#ff4300',
+    backgroundColor: 'transparent'
   }
 });
 
@@ -29,7 +35,12 @@ export default function Submission(props) {
         <Grid container className={classes.root} spacing={2}>
           <Grid item xs={12}>
             <Typography className={classes.title} variant="h6">
-              {props.title}
+              <Highlighter
+                highlightClassName={classes.highlight}
+                searchWords={parseKeywords(props.keywords)}
+                textToHighlight={props.title}
+                autoEscape
+               />
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -46,22 +57,22 @@ export default function Submission(props) {
             <Grid container justifyContent="space-evenly">
               <Grid item xs align="center">
                 <IconButton>
-                  <MailIcon />
+                  <MailIcon color="primary" />
                 </IconButton>
               </Grid>
               <Grid item xs align="center">
                 <IconButton>
-                  <InsertCommentIcon />
+                  <InsertCommentIcon color="primary" />
                 </IconButton>
               </Grid>
               <Grid item xs align="center">
                 <IconButton>
-                  <OpenInNewIcon />
+                  <OpenInNewIcon color="primary" />
                 </IconButton>
               </Grid>
               <Grid item xs align="center">
                 <IconButton>
-                  <DeleteIcon />
+                  <DeleteIcon color="primary" />
                 </IconButton>
               </Grid>
             </Grid>

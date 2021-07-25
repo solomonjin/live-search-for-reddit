@@ -97,6 +97,7 @@ export default function App(props) {
   const newContext = {
     user,
     handleSignIn,
+    keywords,
     changeKeywords,
     changeSubs,
     changeInbox,

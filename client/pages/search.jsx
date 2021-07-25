@@ -20,7 +20,7 @@ const useStyles = makeStyles({
 });
 
 export default function Search(props) {
-  const { searchResults, isSearching } = useContext(AppContext);
+  const { searchResults, isSearching, keywords } = useContext(AppContext);
   const classes = useStyles();
 
   const searching = isSearching
@@ -60,6 +60,7 @@ export default function Search(props) {
             date={post.created_utc}
             text={post.selftext_html}
             url={post.url}
+            keywords={keywords}
           />
         </Grid>
       )}
