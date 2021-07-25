@@ -1,6 +1,6 @@
-import React from 'react';
-import { Grid, Box, IconButton, Typography } from '@material-ui/core';
-import { MyPaper } from '.';
+import React, { useState } from 'react';
+import { Grid, Box, IconButton, Typography, Collapse } from '@material-ui/core';
+import { MyPaper, SubmissionBody } from '.';
 import { makeStyles } from '@material-ui/core/styles';
 import MailIcon from '@material-ui/icons/Mail';
 import InsertCommentIcon from '@material-ui/icons/InsertComment';
@@ -34,10 +34,15 @@ const useStyles = makeStyles({
 });
 
 export default function Submission(props) {
+  const [toggleBody, setToggleBody] = useState(false);
   const classes = useStyles();
 
+  const toggleCollapse = () => {
+    setToggleBody(!toggleBody);
+  };
+
   return (
-    <MyPaper className={classes.hover} elevation={3}>
+    <MyPaper className={classes.hover} elevation={3} onClick={toggleCollapse}>
       <Box p={2} pb={0}>
         <Grid container className={classes.root} spacing={2}>
           <Grid item xs={12}>
@@ -59,6 +64,11 @@ export default function Submission(props) {
             <Typography className={classes.subtext} variant="body2">
               {formatDate(parseInt(props.date))}
             </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Collapse in={toggleBody}>
+              <SubmissionBody text={props.text} />
+            </Collapse>
           </Grid>
           <Grid item xs={12}>
             <Grid container justifyContent="space-evenly">

@@ -14,7 +14,11 @@ const useStyles = makeStyles({
 export default function MyPaper(props) {
   const classes = useStyles();
   return (
-  <Paper elevation={props.elevation} className={`${classes.root} ${props.className}`}>
+  <Paper
+    elevation={props.elevation}
+    className={`${classes.root} ${props.className}`}
+    onClick={props.onClick}
+    >
     {props.children}
   </Paper>
   );

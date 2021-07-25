@@ -6,9 +6,10 @@ import SearchForm from './search-form';
 import SearchMessage from './search-message';
 import SignInButton from './sign-in-button';
 import Submission from './submission';
+import SubmissionBody from './submission-body';
 
 export {
   MyDrawer, MyPaper, Navbar, RedditLogo,
   SearchForm, SearchMessage, SignInButton,
-  Submission
+  Submission, SubmissionBody
 };
