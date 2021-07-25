@@ -23,6 +23,13 @@ const useStyles = makeStyles({
   highlight: {
     color: '#ff4300',
     backgroundColor: 'transparent'
+  },
+  hover: {
+    transition: 'transform 0.25s ease-in-out',
+    '&:hover': {
+      cursor: 'pointer',
+      transform: 'scale(1.05)'
+    }
   }
 });
 
@@ -30,7 +37,7 @@ export default function Submission(props) {
   const classes = useStyles();
 
   return (
-    <MyPaper elevation={3}>
+    <MyPaper className={classes.hover} elevation={3}>
       <Box p={2} pb={0}>
         <Grid container className={classes.root} spacing={2}>
           <Grid item xs={12}>

@@ -14,7 +14,7 @@ const useStyles = makeStyles({
 export default function MyPaper(props) {
   const classes = useStyles();
   return (
-  <Paper elevation={props.elevation} className={classes.root}>
+  <Paper elevation={props.elevation} className={`${classes.root} ${props.className}`}>
     {props.children}
   </Paper>
   );
