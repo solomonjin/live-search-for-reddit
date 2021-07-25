@@ -31,6 +31,7 @@ const useStyles = makeStyles({
     }
   },
   hoverTitle: {
+    width: '100%',
     '&:hover': {
       cursor: 'pointer'
     }
