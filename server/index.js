@@ -2,18 +2,13 @@ require('dotenv/config');
 const express = require('express');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
+const authorizationMiddleware = require('./authorization-middleware');
+const { createSearchStream, parseKeywords } = require('./createSearchStream');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
-const pg = require('pg');
-const snoowrap = require('snoowrap');
+const Snoowrap = require('snoowrap');
 const ClientError = require('./client-error');
-
-const db = new pg.Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
+const db = require('./db');
 
 const app = express();
 
@@ -38,7 +33,7 @@ app.get('/api/auth', (req, res, next) => {
 
 app.get('/api/sign-in', (req, res, next) => {
   res.set('Access-Control-Allow-Origin', '*');
-  res.json(snoowrap.getAuthUrl({
+  res.json(Snoowrap.getAuthUrl({
     clientId: process.env.CLIENT_ID,
     scope: ['identity', 'privatemessages', 'read'],
     redirectUri: 'http://localhost:3000/api/authorize',
@@ -52,7 +47,7 @@ app.get('/api/authorize', (req, res, next) => {
     throw new ClientError(401, 'authorization error');
   }
 
-  snoowrap.fromAuthCode({
+  Snoowrap.fromAuthCode({
     code,
     userAgent: 'keyword finder app v1.0 (by /u/buddhabab23',
     clientId: process.env.CLIENT_ID,
@@ -108,9 +103,43 @@ app.get('/api/authorize', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.use(authorizationMiddleware);
+
+app.post('/api/search', (req, res, next) => {
+  const { keywords, subreddits, sendToInbox } = req.body;
+  if (!keywords || !subreddits || sendToInbox === null) {
+    throw new ClientError(400, 'missing search terms');
+  }
+
+  const r = new Snoowrap({
+    userAgent: 'keyword finder app v1.0 (by /u/buddhababy23)',
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    refreshToken: req.user.refreshToken
+  });
+
+  const submissions = createSearchStream(r, subreddits);
+
+  const submissionsList = [];
+  const parsedKw = parseKeywords(keywords);
+
+  submissions.on('item', submission => {
+    if (parsedKw.some(word => submission.title.toLowerCase().includes(word.toLowerCase()))) {
+      submissionsList.push(submission);
+    }
+    if (submissionsList.length >= 5) submissions.end();
+  });
+
+  submissions.on('end', function submissionEnd() {
+    res.json(submissionsList);
+  });
+});
+
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`express server listening on port ${process.env.PORT}`);
 });
+
+module.exports = db;
