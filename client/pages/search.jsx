@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Container, Box, LinearProgress, Grid, Typography, Fade, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { MyPaper, SearchMessage } from '../components';
+import { MyPaper, SearchMessage, Submission } from '../components';
 import AppContext from '../lib/app-context';
 
 const useStyles = makeStyles({
@@ -49,6 +49,23 @@ export default function Search(props) {
     );
   }
 
+  const submissions = searchResults
+    ? (<Grid container spacing={3}>
+      {searchResults.map(post =>
+        <Grid item sm={12} md={6} key={post.id}>
+          <Submission
+            title={post.title}
+            author={post.author}
+            sub={post.subreddit_name_prefixed}
+            date={post.created_utc}
+            text={post.selftext_html}
+            url={post.url}
+          />
+        </Grid>
+      )}
+    </Grid>)
+    : <></>;
+
   return (
     <Fade in>
       <Container className={classes.root} maxWidth="xl">
@@ -68,6 +85,7 @@ export default function Search(props) {
           </Grid>
         </Box>
         {searching}
+        {submissions}
       </Container>
     </Fade>
   );
