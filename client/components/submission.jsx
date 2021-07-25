@@ -25,10 +25,14 @@ const useStyles = makeStyles({
     backgroundColor: 'transparent'
   },
   hover: {
-    transition: 'transform 0.25s ease-in-out',
+    transition: 'transform 0.3s ease-in-out',
     '&:hover': {
-      cursor: 'pointer',
-      transform: 'scale(1.05)'
+      transform: 'scale(1.025)'
+    }
+  },
+  hoverTitle: {
+    '&:hover': {
+      cursor: 'pointer'
     }
   }
 });
@@ -42,29 +46,31 @@ export default function Submission(props) {
   };
 
   return (
-    <MyPaper className={classes.hover} elevation={3} onClick={toggleCollapse}>
+    <MyPaper className={classes.hover} elevation={3}>
       <Box p={2} pb={0}>
         <Grid container className={classes.root} spacing={2}>
-          <Grid item xs={12}>
-            <Typography className={classes.title} variant="h6">
-              <Highlighter
-                highlightClassName={classes.highlight}
-                searchWords={parseKeywords(props.keywords)}
-                textToHighlight={props.title}
-                autoEscape
-               />
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography className={classes.subtext} variant="body2">
-              {`Posted by ${props.author} in ${props.sub}`}
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography className={classes.subtext} variant="body2">
-              {formatDate(parseInt(props.date))}
-            </Typography>
-          </Grid>
+          <Box className={classes.hoverTitle} onClick={toggleCollapse}>
+            <Grid item xs={12}>
+              <Typography className={classes.title} variant="h6">
+                <Highlighter
+                  highlightClassName={classes.highlight}
+                  searchWords={parseKeywords(props.keywords)}
+                  textToHighlight={props.title}
+                  autoEscape
+                />
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography className={classes.subtext} variant="body2">
+                {`Posted by ${props.author} in ${props.sub}`}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography className={classes.subtext} variant="body2">
+                {formatDate(parseInt(props.date))}
+              </Typography>
+            </Grid>
+          </Box>
           <Grid item xs={12}>
             <Collapse in={toggleBody}>
               <SubmissionBody text={props.text} />
