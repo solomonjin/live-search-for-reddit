@@ -70,6 +70,7 @@ export default function App(props) {
   const submitSearch = event => {
     event.preventDefault();
     setIsSearching(true);
+    history.push('/search');
     closeSearchForm();
     const userInputs = {
       keywords,
@@ -84,7 +85,6 @@ export default function App(props) {
     fetch('/api/search', req)
       .then(res => res.json())
       .then(results => {
-        history.push('/search');
         event.target.reset();
         setIsSearching(false);
         setSearchResults(results);

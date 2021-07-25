@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Container, Box, LinearProgress, Grid } from '@material-ui/core';
+import { Container, Box, LinearProgress, Grid, Typography, Fade, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { MyPaper, SearchMessage } from '../components';
 import AppContext from '../lib/app-context';
@@ -8,17 +8,28 @@ const useStyles = makeStyles({
   root: {
     paddingTop: '65px'
   },
+  searchText: {
+    opacity: '50%'
+  },
   hideProgress: {
     visibility: 'hidden'
   },
-  noSearch: {
-    marginTop: '2rem'
+  button: {
+    margin: '0 5px'
   }
 });
 
 export default function Search(props) {
   const { searchResults, isSearching } = useContext(AppContext);
   const classes = useStyles();
+
+  const searching = isSearching
+    ? <LinearProgress />
+    : <LinearProgress className={classes.hideProgress} />;
+
+  const message = isSearching
+    ? 'Searching...'
+    : 'Results';
 
   if (!isSearching && !searchResults) {
     return (
@@ -39,11 +50,25 @@ export default function Search(props) {
   }
 
   return (
-    <Container className={classes.root} maxWidth="xl">
-      <Box>
-        <div>SEARCH PAGE</div>
-      </Box>
-      <LinearProgress />
-    </Container>
+    <Fade in>
+      <Container className={classes.root} maxWidth="xl">
+        <Box m={1}>
+          <Grid container justifyContent="space-between" alignItems="flex-end">
+            <Grid item xs={2}>
+              <Typography className={classes.searchText} variant="body1">{message}</Typography>
+            </Grid>
+            <Grid item xs>
+              <Grid container justifyContent="flex-end">
+                <Grid item align="end">
+                  <Button className={classes.button} size="small" variant="contained" color="primary">Clear All</Button>
+                  <Button className={classes.button} size="small" variant="contained" color="secondary">Cancel</Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
+        {searching}
+      </Container>
+    </Fade>
   );
 }
