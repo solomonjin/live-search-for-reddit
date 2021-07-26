@@ -129,10 +129,16 @@ app.post('/api/search', (req, res, next) => {
 });
 
 app.post('/api/comment', (req, res, next) => {
-  const { comment } = req.body;
-  if (!comment) {
-    throw new ClientError(400, 'invalid comment');
+  const { comment, submissionId } = req.body;
+  if (!comment || !submissionId) {
+    throw new ClientError(400, 'invalid request');
   }
+
+  req.user.requester.getSubmission(submissionId).reply(comment)
+    .then(userComment => {
+      res.status(201).json(userComment);
+    })
+    .catch(err => next(err));
 });
 
 app.use(errorMiddleware);
