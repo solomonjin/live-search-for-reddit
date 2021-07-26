@@ -51,8 +51,9 @@ export default function MessageDialog(props) {
       setLoading(true);
     }
     const userMessage = {
+      author: props.author,
       message,
-      submissionId: props.submissionId
+      subject
     };
     const req = {
       method: 'post',
@@ -61,13 +62,14 @@ export default function MessageDialog(props) {
     };
     fetch('/api/message', req)
       .then(res => res.json())
-      .then(comment => {
+      .then(message => {
         setLoading(false);
         setSuccess(true);
         setTimeout(() => {
           props.onClose();
           setSuccess(false);
           setMessage('');
+          setSubject('');
         }, 1000);
       })
       .catch(err => console.error(err));
