@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Grid, Box, IconButton, Typography, Collapse } from '@material-ui/core';
-import { MyPaper, SubmissionBody, CommentDialog } from '.';
+import { MyPaper, SubmissionBody, CommentDialog, MessageDialog } from '.';
 import { makeStyles } from '@material-ui/core/styles';
 import MailIcon from '@material-ui/icons/Mail';
 import InsertCommentIcon from '@material-ui/icons/InsertComment';
@@ -41,6 +41,7 @@ const useStyles = makeStyles({
 export default function Submission(props) {
   const [toggleBody, setToggleBody] = useState(false);
   const [toggleComment, setToggleComment] = useState(false);
+  const [messageBox, setMessageBox] = useState(false);
   const classes = useStyles();
 
   const toggleCollapse = () => {
@@ -48,11 +49,19 @@ export default function Submission(props) {
   };
 
   const openCommentBox = () => {
-    setToggleComment(!toggleComment);
+    setToggleComment(true);
   };
 
   const closeCommentBox = () => {
     setToggleComment(false);
+  };
+
+  const openMessageBox = () => {
+    setMessageBox(true);
+  };
+
+  const closeMessageBox = () => {
+    setMessageBox(false);
   };
 
   return (
@@ -89,9 +98,13 @@ export default function Submission(props) {
           <Grid item xs={12}>
             <Grid container justifyContent="space-evenly">
               <Grid item xs align="center">
-                <IconButton>
+                <IconButton onClick={openMessageBox}>
                   <MailIcon color="primary" />
                 </IconButton>
+                <MessageDialog
+                  open={messageBox}
+                  onClose={closeMessageBox}
+                />
               </Grid>
               <Grid item xs align="center">
                 <IconButton onClick={openCommentBox}>
