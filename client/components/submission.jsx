@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Grid, Box, IconButton, Typography, Collapse } from '@material-ui/core';
-import { MyPaper, SubmissionBody } from '.';
+import { MyPaper, SubmissionBody, CommentDialog } from '.';
 import { makeStyles } from '@material-ui/core/styles';
 import MailIcon from '@material-ui/icons/Mail';
 import InsertCommentIcon from '@material-ui/icons/InsertComment';
@@ -88,6 +88,7 @@ export default function Submission(props) {
                 <IconButton>
                   <InsertCommentIcon color="primary" />
                 </IconButton>
+                <CommentDialog />
               </Grid>
               <Grid item xs align="center">
                 <IconButton>
