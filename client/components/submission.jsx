@@ -97,7 +97,11 @@ export default function Submission(props) {
                 <IconButton onClick={openCommentBox}>
                   <InsertCommentIcon color="primary" />
                 </IconButton>
-                <CommentDialog open={toggleComment} onClose={closeCommentBox} />
+                <CommentDialog
+                  open={toggleComment}
+                  onClose={closeCommentBox}
+                  postId={props.postId}
+                />
               </Grid>
               <Grid item xs align="center">
                 <IconButton>

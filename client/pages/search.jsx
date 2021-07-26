@@ -61,6 +61,7 @@ export default function Search(props) {
             text={post.selftext_html}
             url={post.url}
             keywords={keywords}
+            postId={post.id}
           />
         </Grid>
       )}
