@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const ClientError = require('./client-error');
+const Snoowrap = require('snoowrap');
 require('dotenv/config');
 const db = require('./db');
 
@@ -19,10 +20,19 @@ function authorizationMiddleware(req, res, next) {
   const params = [payload.userId];
   db.query(sql, params)
     .then(result => {
-      const [user] = result.rows;
-      if (!user) {
+      const [userInfo] = result.rows;
+      if (!userInfo) {
         throw new ClientError(401, 'user not found');
       }
+
+      const requester = new Snoowrap({
+        userAgent: 'keyword finder app v1.0 (by /u/buddhababy23)',
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        refreshToken: userInfo.refreshToken
+      });
+
+      const user = Object.assign({}, userInfo, { requester });
       req.user = user;
       next();
     })

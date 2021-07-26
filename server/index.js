@@ -111,14 +111,7 @@ app.post('/api/search', (req, res, next) => {
     throw new ClientError(400, 'missing search terms');
   }
 
-  const r = new Snoowrap({
-    userAgent: 'keyword finder app v1.0 (by /u/buddhababy23)',
-    clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    refreshToken: req.user.refreshToken
-  });
-
-  const submissions = createSearchStream(r, subreddits);
+  const submissions = createSearchStream(req.user.requester, subreddits);
 
   const submissionsList = [];
   const parsedKw = parseKeywords(keywords);
@@ -133,6 +126,13 @@ app.post('/api/search', (req, res, next) => {
   submissions.on('end', function submissionEnd() {
     res.json(submissionsList);
   });
+});
+
+app.post('/api/comment', (req, res, next) => {
+  const { comment } = req.body;
+  if (!comment) {
+    throw new ClientError(400, 'invalid comment');
+  }
 });
 
 app.use(errorMiddleware);
