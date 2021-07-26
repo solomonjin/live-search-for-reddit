@@ -100,7 +100,7 @@ export default function Submission(props) {
                 <CommentDialog
                   open={toggleComment}
                   onClose={closeCommentBox}
-                  postId={props.postId}
+                  submissionId={props.submissionId}
                 />
               </Grid>
               <Grid item xs align="center">
