@@ -141,6 +141,10 @@ app.post('/api/comment', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.post('/api/message', (req, res, next) => {
+
+});
+
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
