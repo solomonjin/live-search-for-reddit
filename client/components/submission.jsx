@@ -72,7 +72,7 @@ export default function Submission(props) {
             </Grid>
             <Grid item xs={12}>
               <Typography className={classes.subtext} variant="body2">
-                {`Posted by ${props.author} in ${props.sub}`}
+                {`Posted by u/${props.author} in ${props.sub}`}
               </Typography>
             </Grid>
             <Grid item xs={12}>
