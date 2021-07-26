@@ -99,6 +99,7 @@ export default function App(props) {
     handleSignIn,
     keywords,
     changeKeywords,
+    subreddits,
     changeSubs,
     changeInbox,
     submitSearch,
