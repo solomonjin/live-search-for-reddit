@@ -3,7 +3,7 @@ import { Dialog, DialogTitle, DialogContent, TextField, Button } from '@material
 
 export default function CommentDialog(props) {
   return (
-    <Dialog>
+    <Dialog open={props.open} onClose={props.onClose}>
       <DialogTitle>Post Comment</DialogTitle>
     </Dialog>
   );

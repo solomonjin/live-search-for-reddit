@@ -40,10 +40,19 @@ const useStyles = makeStyles({
 
 export default function Submission(props) {
   const [toggleBody, setToggleBody] = useState(false);
+  const [toggleComment, setToggleComment] = useState(false);
   const classes = useStyles();
 
   const toggleCollapse = () => {
     setToggleBody(!toggleBody);
+  };
+
+  const openCommentBox = () => {
+    setToggleComment(!toggleComment);
+  };
+
+  const closeCommentBox = () => {
+    setToggleComment(false);
   };
 
   return (
@@ -85,10 +94,10 @@ export default function Submission(props) {
                 </IconButton>
               </Grid>
               <Grid item xs align="center">
-                <IconButton>
+                <IconButton onClick={openCommentBox}>
                   <InsertCommentIcon color="primary" />
                 </IconButton>
-                <CommentDialog />
+                <CommentDialog open={toggleComment} onClose={closeCommentBox} />
               </Grid>
               <Grid item xs align="center">
                 <IconButton>
