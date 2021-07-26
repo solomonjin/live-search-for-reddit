@@ -35,7 +35,7 @@ app.get('/api/sign-in', (req, res, next) => {
   res.set('Access-Control-Allow-Origin', '*');
   res.json(Snoowrap.getAuthUrl({
     clientId: process.env.CLIENT_ID,
-    scope: ['identity', 'privatemessages', 'read'],
+    scope: ['identity', 'privatemessages', 'read', 'submit'],
     redirectUri: 'http://localhost:3000/api/authorize',
     permanent: true
   }));
