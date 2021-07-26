@@ -104,6 +104,7 @@ export default function Submission(props) {
                 <MessageDialog
                   open={messageBox}
                   onClose={closeMessageBox}
+                  author={props.author}
                 />
               </Grid>
               <Grid item xs align="center">
