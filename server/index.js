@@ -142,7 +142,10 @@ app.post('/api/comment', (req, res, next) => {
 });
 
 app.post('/api/message', (req, res, next) => {
-
+  const { author, message, subject } = req.body;
+  if (!author || !message || !subject) {
+    throw new ClientError(400, 'invalid request');
+  }
 });
 
 app.use(errorMiddleware);
