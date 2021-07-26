@@ -44,7 +44,9 @@ const useStyles = makeStyles(theme => ({
 export default function SearchForm(props) {
   const {
     submitSearch,
+    keywords,
     changeKeywords,
+    subreddits,
     changeSubs,
     changeInbox,
     toggleInbox,
@@ -72,13 +74,13 @@ export default function SearchForm(props) {
                       <TextField fullWidth required
                         variant="outlined" label="Keywords"
                         placeholder="Separated by commas"
-                        onChange={changeKeywords} />
+                        onChange={changeKeywords} value={keywords} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField fullWidth required
                         variant="outlined" label="Subreddits"
                         placeholder="Separated by commas"
-                        onChange={changeSubs} />
+                        onChange={changeSubs} value={subreddits} />
                     </Grid>
                     <Grid item xs={12}>
                       <FormControlLabel
