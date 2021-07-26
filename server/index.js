@@ -141,6 +141,25 @@ app.post('/api/comment', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.post('/api/message', (req, res, next) => {
+  const { author, message, subject } = req.body;
+  if (!author || !message || !subject) {
+    throw new ClientError(400, 'invalid request');
+  }
+
+  const messageParams = {
+    to: author,
+    subject,
+    text: message
+  };
+
+  req.user.requester.composeMessage(messageParams)
+    .then(userMessage => {
+      res.status(201).json(userMessage);
+    })
+    .catch(err => next(err));
+});
+
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {

@@ -8,9 +8,11 @@ import SignInButton from './sign-in-button';
 import Submission from './submission';
 import SubmissionBody from './submission-body';
 import CommentDialog from './comment-dialog';
+import MessageDialog from './message-dialog';
 
 export {
   MyDrawer, MyPaper, Navbar, RedditLogo,
   SearchForm, SearchMessage, SignInButton,
-  Submission, SubmissionBody, CommentDialog
+  Submission, SubmissionBody, CommentDialog,
+  MessageDialog
 };
