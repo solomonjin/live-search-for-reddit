@@ -148,7 +148,20 @@ const submissionStreams = io.of('/search').use((socket, next) => {
 });
 
 submissionStreams.on('connection', socket => {
+  const { keywords, subreddits, sendToInbox } = socket.handshake.query;
+  if (!keywords || !subreddits || sendToInbox === null) {
+    throw new ClientError(400, 'missing search terms');
+  }
 
+  const connectedAt = Date.now() / 1000;
+
+  const subStream = createSearchStream(socket.user.requester, subreddits);
+
+  const parsedKw = parseKeywords(keywords);
+
+  submissions.on('item', submission => {
+
+  });
 });
 
 app.post('/api/search', (req, res, next) => {
