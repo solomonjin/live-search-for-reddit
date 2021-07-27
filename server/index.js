@@ -7,7 +7,6 @@ const staticMiddleware = require('./static-middleware');
 const authorizationMiddleware = require('./authorization-middleware');
 const { createSearchStream, parseKeywords } = require('./createSearchStream');
 const jwt = require('jsonwebtoken');
-const cookie = require('cookie');
 const cookieParser = require('cookie-parser');
 const Snoowrap = require('snoowrap');
 const ClientError = require('./client-error');
@@ -21,7 +20,8 @@ app.use(staticMiddleware);
 
 app.use(express.json());
 
-app.use(cookieParser(process.env.COOKIE_SECRET));
+const parseCookies = cookieParser(process.env.COOKIE_SECRET);
+app.use(parseCookies);
 
 app.get('/api/auth', (req, res, next) => {
   let payload;
@@ -110,13 +110,15 @@ app.get('/api/authorize', (req, res, next) => {
 
 app.use(authorizationMiddleware);
 
-io.use((socket, next) => {
-  const cookies = cookie.parse(socket.handshake.headers.cookie);
+const submissionStreams = io.of('/search').use((socket, next) => {
+  parseCookies(socket.request, null, next);
+  const cookies = socket.request.signedCookies;
   if (!cookies.userToken) {
-    const err = new Error('authentication required');
-    next(err);
+    next(new ClientError(401, 'authentication required'));
   }
+
   const payload = jwt.verify(cookies.userToken, process.env.TOKEN_SECRET);
+
   const sql = `
     select *
       from "users"
@@ -143,6 +145,10 @@ io.use((socket, next) => {
       next();
     })
     .catch(err => next(err));
+});
+
+submissionStreams.on('connection', socket => {
+
 });
 
 app.post('/api/search', (req, res, next) => {
@@ -202,7 +208,7 @@ app.post('/api/message', (req, res, next) => {
 
 app.use(errorMiddleware);
 
-app.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`express server listening on port ${process.env.PORT}`);
 });

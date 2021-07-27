@@ -4,6 +4,7 @@ import AppContext from './lib/app-context';
 import Navbar from './components/navbar';
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { io } from 'socket.io-client';
 
 const theme = createTheme({
   palette: {
@@ -34,6 +35,9 @@ export default function App(props) {
         setUser(result.username);
         setIsAuthorizing(false);
       });
+  }, []);
+
+  useEffect(() => {
   }, []);
 
   const handleSignIn = event => {
