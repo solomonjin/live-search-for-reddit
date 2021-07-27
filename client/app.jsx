@@ -49,7 +49,9 @@ export default function App(props) {
     });
 
     socket.on('new_submission', submission => {
-
+      const copySearchResults = [...searchResults];
+      copySearchResults.unshift(submission);
+      setSearchResults(copySearchResults);
     });
   }, [keywords, subreddits]);
 
