@@ -53,6 +53,10 @@ export default function App(props) {
       copySearchResults.unshift(submission);
       setSearchResults(copySearchResults);
     });
+
+    return () => {
+      socket.disconnect();
+    };
   }, [keywords, subreddits]);
 
   const handleSignIn = event => {
