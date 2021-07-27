@@ -159,8 +159,11 @@ submissionStreams.on('connection', socket => {
 
   const parsedKw = parseKeywords(keywords);
 
-  submissions.on('item', submission => {
-
+  subStream.on('item', submission => {
+    if (connectedAt > submission.created_utc) return;
+    if (parsedKw.some(word => submission.title.toLowerCase().includes(word.toLowerCase()))) {
+      socket.emit('new_submission', submission);
+    }
   });
 });
 
