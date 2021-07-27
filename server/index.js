@@ -7,6 +7,7 @@ const staticMiddleware = require('./static-middleware');
 const authorizationMiddleware = require('./authorization-middleware');
 const { createSearchStream, parseKeywords } = require('./createSearchStream');
 const jwt = require('jsonwebtoken');
+const cookie = require('cookie');
 const cookieParser = require('cookie-parser');
 const Snoowrap = require('snoowrap');
 const ClientError = require('./client-error');
@@ -108,6 +109,41 @@ app.get('/api/authorize', (req, res, next) => {
 });
 
 app.use(authorizationMiddleware);
+
+io.use((socket, next) => {
+  const cookies = cookie.parse(socket.handshake.headers.cookie);
+  if (!cookies.userToken) {
+    const err = new Error('authentication required');
+    next(err);
+  }
+  const payload = jwt.verify(cookies.userToken, process.env.TOKEN_SECRET);
+  const sql = `
+    select *
+      from "users"
+     where "userId" = $1;
+  `;
+
+  const params = [payload.userId];
+  db.query(sql, params)
+    .then(result => {
+      const [userInfo] = result.rows;
+      if (!userInfo) {
+        throw new ClientError(401, 'user not found');
+      }
+
+      const requester = new Snoowrap({
+        userAgent: 'keyword finder app v1.0 (by /u/buddhababy23)',
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        refreshToken: userInfo.refreshToken
+      });
+
+      const user = Object.assign({}, userInfo, { requester });
+      socket.user = user;
+      next();
+    })
+    .catch(err => next(err));
+});
 
 app.post('/api/search', (req, res, next) => {
   const { keywords, subreddits, sendToInbox } = req.body;
