@@ -55,41 +55,14 @@ export default function App(props) {
     setSearchFormOpen(false);
   };
 
-  const changeKeywords = event => {
-    setKeywords(event.target.value);
-  };
-
-  const changeSubs = event => {
-    setSubs(event.target.value);
-  };
-
-  const changeInbox = event => {
-    setToggleInbox(!toggleInbox);
-  };
-
-  const submitSearch = event => {
+  const submitSearch = (event, kw, subs, inbox) => {
     event.preventDefault();
     setIsSearching(true);
     history.push('/search');
     closeSearchForm();
-    const userInputs = {
-      keywords,
-      subreddits,
-      sendToInbox: toggleInbox
-    };
-    const req = {
-      method: 'post',
-      body: JSON.stringify(userInputs),
-      headers: { 'Content-Type': 'application/json' }
-    };
-    fetch('/api/search', req)
-      .then(res => res.json())
-      .then(results => {
-        event.target.reset();
-        setIsSearching(false);
-        setSearchResults(results);
-      })
-      .catch(err => console.error(err));
+    setKeywords(kw);
+    setSubs(subs);
+    setToggleInbox(inbox);
   };
 
   if (isAuthorizing) return null;
@@ -98,10 +71,7 @@ export default function App(props) {
     user,
     handleSignIn,
     keywords,
-    changeKeywords,
     subreddits,
-    changeSubs,
-    changeInbox,
     submitSearch,
     toggleInbox,
     searchResults,
