@@ -38,8 +38,14 @@ export default function App(props) {
   }, []);
 
   useEffect(() => {
+    if (keywords === '' || subreddits === '') return;
+
     const socket = io('/search');
-  }, []);
+
+    socket.on('new_submission', submission => {
+
+    });
+  }, [keywords, subreddits]);
 
   const handleSignIn = event => {
     event.preventDefault();
