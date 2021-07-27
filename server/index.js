@@ -148,8 +148,8 @@ const submissionStreams = io.of('/search').use((socket, next) => {
 });
 
 submissionStreams.on('connection', socket => {
-  const { keywords, subreddits, sendToInbox } = socket.handshake.query;
-  if (!keywords || !subreddits || sendToInbox === null) {
+  const { keywords, subreddits, toggleInbox } = socket.handshake.query;
+  if (!keywords || !subreddits || toggleInbox === null) {
     throw new ClientError(400, 'missing search terms');
   }
 
@@ -167,28 +167,28 @@ submissionStreams.on('connection', socket => {
   });
 });
 
-app.post('/api/search', (req, res, next) => {
-  const { keywords, subreddits, sendToInbox } = req.body;
-  if (!keywords || !subreddits || sendToInbox === null) {
-    throw new ClientError(400, 'missing search terms');
-  }
+// app.post('/api/search', (req, res, next) => {
+//   const { keywords, subreddits, toggleInbox } = req.body;
+//   if (!keywords || !subreddits || toggleInbox === null) {
+//     throw new ClientError(400, 'missing search terms');
+//   }
 
-  const submissions = createSearchStream(req.user.requester, subreddits);
+//   const submissions = createSearchStream(req.user.requester, subreddits);
 
-  const submissionsList = [];
-  const parsedKw = parseKeywords(keywords);
+//   const submissionsList = [];
+//   const parsedKw = parseKeywords(keywords);
 
-  submissions.on('item', submission => {
-    if (parsedKw.some(word => submission.title.toLowerCase().includes(word.toLowerCase()))) {
-      submissionsList.push(submission);
-    }
-    if (submissionsList.length >= 5) submissions.end();
-  });
+//   submissions.on('item', submission => {
+//     if (parsedKw.some(word => submission.title.toLowerCase().includes(word.toLowerCase()))) {
+//       submissionsList.push(submission);
+//     }
+//     if (submissionsList.length >= 5) submissions.end();
+//   });
 
-  submissions.on('end', function submissionEnd() {
-    res.json(submissionsList);
-  });
-});
+//   submissions.on('end', function submissionEnd() {
+//     res.json(submissionsList);
+//   });
+// });
 
 app.post('/api/comment', (req, res, next) => {
   const { comment, submissionId } = req.body;

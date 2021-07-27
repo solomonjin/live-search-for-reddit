@@ -40,7 +40,13 @@ export default function App(props) {
   useEffect(() => {
     if (keywords === '' || subreddits === '') return;
 
-    const socket = io('/search');
+    const socket = io('/search', {
+      query: {
+        keywords,
+        subreddits,
+        toggleInbox
+      }
+    });
 
     socket.on('new_submission', submission => {
 
