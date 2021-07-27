@@ -1,5 +1,7 @@
 require('dotenv/config');
 const express = require('express');
+const http = require('http');
+const socketio = require('socket.io');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
 const authorizationMiddleware = require('./authorization-middleware');
@@ -11,6 +13,8 @@ const ClientError = require('./client-error');
 const db = require('./db');
 
 const app = express();
+const server = http.createServer(app);
+const io = socketio(server);
 
 app.use(staticMiddleware);
 
