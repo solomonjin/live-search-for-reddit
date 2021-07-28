@@ -155,11 +155,22 @@ submissionStreams.on('connection', socket => {
   if (!keywords || !subreddits || toggleInbox === null) {
     throw new ClientError(400, 'missing search terms');
   }
+
   const connectedAt = Date.now() / 1000;
 
   const subStream = createSearchStream(socket.user.requester, subreddits);
 
   const parsedKw = parseKeywords(keywords);
+
+  const botRequester = toggleInbox
+    ? new Snoowrap({
+      userAgent: 'keyword finder app v1.0 by (/u/buddhababy23)',
+      clientId: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      username: process.env.REDDIT_USER,
+      password: process.env.REDDIT_PW
+    })
+    : null;
 
   subStream.on('item', submission => {
     if (connectedAt > submission.created_utc) return;
