@@ -142,7 +142,7 @@ submissionStreams.on('connection', socket => {
     throw new ClientError(400, 'missing search terms');
   }
 
-  const connectedAt = Date.now() / 1000;
+  const connectedAt = Math.floor(Date.now() / 1000);
 
   const subStream = createSearchStream(socket.user.requester, subreddits);
 
