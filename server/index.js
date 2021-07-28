@@ -177,7 +177,14 @@ submissionStreams.on('connection', socket => {
     if (parsedKw.some(word => submission.title.toLowerCase().includes(word.toLowerCase()))) {
       socket.emit('new_submission', submission);
       if (botRequester) {
-
+        socket.user.requester.getMe()
+          .then(user => {
+            botRequester.composeMessage({
+              to: user,
+              subject: `Keyword Found: ${submission.title}`,
+              text: submission.url
+            });
+          });
       }
     }
   });
