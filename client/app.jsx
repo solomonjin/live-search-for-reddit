@@ -4,6 +4,7 @@ import AppContext from './lib/app-context';
 import Navbar from './components/navbar';
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { io } from 'socket.io-client';
 
 const theme = createTheme({
   palette: {
@@ -19,7 +20,7 @@ const theme = createTheme({
 export default function App(props) {
   const [user, setUser] = useState(null);
   const [isAuthorizing, setIsAuthorizing] = useState(true);
-  const [searchResults, setSearchResults] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
   const [keywords, setKeywords] = useState('');
   const [subreddits, setSubs] = useState('');
   const [toggleInbox, setToggleInbox] = useState(false);
@@ -35,6 +36,27 @@ export default function App(props) {
         setIsAuthorizing(false);
       });
   }, []);
+
+  useEffect(() => {
+    if (keywords === '' || subreddits === '') return;
+
+    const socket = io('/search', {
+      query: {
+        keywords,
+        subreddits,
+        toggleInbox
+      }
+    });
+
+    socket.on('new_submission', submission => {
+      setSearchResults(prevSearchResults => [submission, ...prevSearchResults]);
+    });
+
+    return () => {
+      socket.disconnect();
+      setIsSearching(false);
+    };
+  }, [keywords, subreddits]);
 
   const handleSignIn = event => {
     event.preventDefault();
@@ -55,41 +77,14 @@ export default function App(props) {
     setSearchFormOpen(false);
   };
 
-  const changeKeywords = event => {
-    setKeywords(event.target.value);
-  };
-
-  const changeSubs = event => {
-    setSubs(event.target.value);
-  };
-
-  const changeInbox = event => {
-    setToggleInbox(!toggleInbox);
-  };
-
-  const submitSearch = event => {
+  const submitSearch = (event, kw, subs, inbox) => {
     event.preventDefault();
     setIsSearching(true);
     history.push('/search');
     closeSearchForm();
-    const userInputs = {
-      keywords,
-      subreddits,
-      sendToInbox: toggleInbox
-    };
-    const req = {
-      method: 'post',
-      body: JSON.stringify(userInputs),
-      headers: { 'Content-Type': 'application/json' }
-    };
-    fetch('/api/search', req)
-      .then(res => res.json())
-      .then(results => {
-        event.target.reset();
-        setIsSearching(false);
-        setSearchResults(results);
-      })
-      .catch(err => console.error(err));
+    setKeywords(kw);
+    setSubs(subs);
+    setToggleInbox(inbox);
   };
 
   if (isAuthorizing) return null;
@@ -98,10 +93,7 @@ export default function App(props) {
     user,
     handleSignIn,
     keywords,
-    changeKeywords,
     subreddits,
-    changeSubs,
-    changeInbox,
     submitSearch,
     toggleInbox,
     searchResults,

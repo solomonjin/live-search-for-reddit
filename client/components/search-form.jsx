@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   IconButton, TextField, Grid, ClickAwayListener,
   FormControlLabel, Slide, makeStyles, Button,
@@ -44,18 +44,27 @@ const useStyles = makeStyles(theme => ({
 export default function SearchForm(props) {
   const {
     submitSearch,
-    keywords,
-    changeKeywords,
-    subreddits,
-    changeSubs,
-    changeInbox,
-    toggleInbox,
     openSearchForm,
     closeSearchForm,
     searchFormOpen
   } = useContext(AppContext);
+  const [keywords, setKeywords] = useState('');
+  const [subreddits, setSubs] = useState('');
+  const [toggleInbox, setToggleInbox] = useState(false);
 
   const classes = useStyles();
+
+  const changeKeywords = event => {
+    setKeywords(event.target.value);
+  };
+
+  const changeSubs = event => {
+    setSubs(event.target.value);
+  };
+
+  const changeInbox = event => {
+    setToggleInbox(!toggleInbox);
+  };
 
   return (
     <ClickAwayListener onClickAway={closeSearchForm}>
@@ -66,7 +75,9 @@ export default function SearchForm(props) {
 
         <Slide direction="down" in={searchFormOpen} mountOnEnter>
           <div className={classes.root}>
-            <form className={classes.form} onSubmit={submitSearch}>
+            <form className={classes.form} onSubmit={event => {
+              submitSearch(event, keywords, subreddits, toggleInbox);
+            }}>
               <Grid container spacing={3} alignItems="center" justifyContent="space-evenly">
                 <Grid item xs={12} sm={10} align="center">
                   <Grid container spacing={2}>

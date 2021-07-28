@@ -5,7 +5,7 @@ import AppContext from '../lib/app-context';
 export default function SearchMessage(props) {
   const { searchResults } = useContext(AppContext);
 
-  const message = searchResults
+  const message = searchResults.length > 0
     ? `${searchResults.length} submissions found.`
     : 'No active searches. Begin by searching for submisisons';
 

@@ -31,7 +31,7 @@ export default function Search(props) {
     ? 'Searching...'
     : 'Results';
 
-  if (!isSearching && !searchResults) {
+  if (!isSearching && searchResults.length === 0) {
     return (
       <Grid container
         alignItems="center"
@@ -49,23 +49,27 @@ export default function Search(props) {
     );
   }
 
-  const submissions = searchResults !== null
-    ? (<Grid container spacing={3}>
-      {searchResults.map(post =>
-        <Grid item sm={12} md={6} key={post.id}>
-          <Submission
-            title={post.title}
-            author={post.author}
-            sub={post.subreddit_name_prefixed}
-            date={post.created_utc}
-            text={post.selftext_html}
-            url={post.url}
-            keywords={keywords}
-            submissionId={post.id}
-          />
-        </Grid>
-      )}
-    </Grid>)
+  const submissions = searchResults.length > 0
+    ? (
+    <Fade in>
+      <Grid container spacing={3}>
+        {searchResults.map(post =>
+          <Grid item sm={12} md={6} key={post.id}>
+            <Submission
+              title={post.title}
+              author={post.author}
+              sub={post.subreddit_name_prefixed}
+              date={post.created_utc}
+              text={post.selftext_html}
+              url={post.url}
+              keywords={keywords}
+              submissionId={post.id}
+            />
+          </Grid>
+        )}
+      </Grid>
+    </Fade>
+      )
     : <></>;
 
   return (
@@ -87,6 +91,7 @@ export default function Search(props) {
           </Grid>
         </Box>
         {searching}
+        <br />
         {submissions}
       </Container>
     </Fade>

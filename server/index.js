@@ -1,5 +1,7 @@
 require('dotenv/config');
 const express = require('express');
+const http = require('http');
+const socketio = require('socket.io');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
 const authorizationMiddleware = require('./authorization-middleware');
@@ -11,12 +13,15 @@ const ClientError = require('./client-error');
 const db = require('./db');
 
 const app = express();
+const server = http.createServer(app);
+const io = socketio(server);
 
 app.use(staticMiddleware);
 
 app.use(express.json());
 
-app.use(cookieParser(process.env.COOKIE_SECRET));
+const parseCookies = cookieParser(process.env.COOKIE_SECRET);
+app.use(parseCookies);
 
 app.get('/api/auth', (req, res, next) => {
   let payload;
@@ -105,27 +110,71 @@ app.get('/api/authorize', (req, res, next) => {
 
 app.use(authorizationMiddleware);
 
-app.post('/api/search', (req, res, next) => {
-  const { keywords, subreddits, sendToInbox } = req.body;
-  if (!keywords || !subreddits || sendToInbox === null) {
-    throw new ClientError(400, 'missing search terms');
+const submissionStreams = io.of('/search').use((socket, next) => {
+  parseCookies(socket.request, null, next);
+});
+
+submissionStreams.use((socket, next) => {
+  const cookies = socket.request.signedCookies;
+  if (!cookies.userToken) {
+    next(new ClientError(401, 'authentication required'));
   }
 
-  const submissions = createSearchStream(req.user.requester, subreddits);
+  const payload = jwt.verify(cookies.userToken, process.env.TOKEN_SECRET);
 
-  const submissionsList = [];
+  const sql = `
+    select *
+      from "users"
+     where "userId" = $1;
+  `;
+
+  const params = [payload.userId];
+  db.query(sql, params)
+    .then(result => {
+      const [userInfo] = result.rows;
+      if (!userInfo) {
+        next(new ClientError(401, 'user not found'));
+      }
+
+      const requester = new Snoowrap({
+        userAgent: 'keyword finder app v1.0 (by /u/buddhababy23)',
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        refreshToken: userInfo.refreshToken
+      });
+
+      const user = Object.assign({}, userInfo, { requester });
+      socket.user = user;
+      next();
+    })
+    .catch(next);
+});
+
+submissionStreams.on('connection', socket => {
+  const { keywords, subreddits, toggleInbox } = socket.handshake.query;
+  if (!keywords || !subreddits || toggleInbox === null) {
+    throw new ClientError(400, 'missing search terms');
+  }
+  const connectedAt = Date.now() / 1000;
+
+  const subStream = createSearchStream(socket.user.requester, subreddits);
+
   const parsedKw = parseKeywords(keywords);
 
-  submissions.on('item', submission => {
+  subStream.on('item', submission => {
+    if (connectedAt > submission.created_utc) return;
     if (parsedKw.some(word => submission.title.toLowerCase().includes(word.toLowerCase()))) {
-      submissionsList.push(submission);
+      socket.emit('new_submission', submission);
     }
-    if (submissionsList.length >= 5) submissions.end();
   });
 
-  submissions.on('end', function submissionEnd() {
-    res.json(submissionsList);
+  socket.on('disconnect', socket => {
+    subStream.end();
   });
+});
+
+submissionStreams.on('connect_error', err => {
+  console.error(err);
 });
 
 app.post('/api/comment', (req, res, next) => {
@@ -162,7 +211,7 @@ app.post('/api/message', (req, res, next) => {
 
 app.use(errorMiddleware);
 
-app.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`express server listening on port ${process.env.PORT}`);
 });
