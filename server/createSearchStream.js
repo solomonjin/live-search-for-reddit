@@ -39,4 +39,4 @@ function parseSubs(input) {
   return result.join('+');
 }
 
-module.exports = { createSearchStream, parseKeywords };
+module.exports = { createSearchStream, parseKeywords, parseSubs };
