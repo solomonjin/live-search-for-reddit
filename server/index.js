@@ -64,44 +64,30 @@ app.get('/api/authorize', (req, res, next) => {
         .getMe()
         .then(redditUser => {
           const sql = `
-          select *
-          from "users"
-          where "username" = $1;
-          `;
-          const params = [redditUser.name];
+                insert into "users" ("username", "refreshToken")
+                     values ($1, $2)
+                         on conflict ("username")
+                         do update
+                        set "refreshToken" = $2
+                  returning *;`;
+
+          const params = [redditUser.name, requester.refreshToken];
 
           return db
             .query(sql, params)
             .then(result => {
-              const [user] = result.rows;
-              const sql = user
-                ? `
-                update "users"
-                   set "refreshToken" = $2
-                 where "username" = $1
-             returning *;`
-                : `
-                insert into "users" ("username", "refreshToken")
-                     values ($1, $2)
-                  returning *;`;
-              const params = [redditUser.name, requester.refreshToken];
-
-              return db
-                .query(sql, params)
-                .then(result => {
-                  const { username, userId } = result.rows[0];
-                  const newUser = {
-                    username,
-                    userId
-                  };
-                  const token = jwt.sign(newUser, process.env.TOKEN_SECRET);
-                  const cookieParams = {
-                    httpOnly: true,
-                    signed: true,
-                    maxAge: 365 * 24 * 60 * 60 * 1000
-                  };
-                  res.cookie('userToken', token, cookieParams).redirect('/');
-                });
+              const { username, userId } = result.rows[0];
+              const newUser = {
+                username,
+                userId
+              };
+              const token = jwt.sign(newUser, process.env.TOKEN_SECRET);
+              const cookieParams = {
+                httpOnly: true,
+                signed: true,
+                maxAge: 365 * 24 * 60 * 60 * 1000
+              };
+              res.cookie('userToken', token, cookieParams).redirect('/');
             });
         });
     })
