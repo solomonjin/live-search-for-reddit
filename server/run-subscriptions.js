@@ -12,8 +12,13 @@ const r = new Snoowrap({
 });
 
 const sql = `
-    select *
-      from "subscriptions";
+    select "s"."subscriptionId",
+           "s"."keywords",
+           "s"."subreddits",
+           "s"."createdAt",
+           "u"."username"
+      from "subscriptions" as "s"
+      join "users" as "u" using ("userId");
 `;
 
 db.query(sql)
@@ -30,7 +35,8 @@ db.query(sql)
         time: 'hour'
       };
 
-      r.search(searchParams)
+      return r
+        .search(searchParams)
         .then(listings => {
           const submissions = [];
           listings.forEach(post => {
@@ -40,7 +46,17 @@ db.query(sql)
               url: post.url
             });
           });
-
+          const text = submissions.reduce((msg, line) => {
+            return msg + `[${line.title}](${line.url})` + '\n\n';
+          }, '');
+          const message = {
+            to: sub.username,
+            subject: `${submissions.length} results found`,
+            text
+          };
+          return r
+            .composeMessage(message);
         });
     });
-  });
+  })
+  .catch(err => console.error(err));
