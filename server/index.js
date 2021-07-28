@@ -164,9 +164,9 @@ submissionStreams.on('connection', socket => {
 
   const botRequester = toggleInbox
     ? new Snoowrap({
-      userAgent: 'keyword finder app v1.0 by (/u/buddhababy23)',
-      clientId: process.env.CLIENT_ID,
-      clientSecret: process.env.CLIENT_SECRET,
+      userAgent: 'keyword finder bot v1.0 by (/u/buddhababy23)',
+      clientId: process.env.SCRIPT_ID,
+      clientSecret: process.env.SCRIPT_SECRET,
       username: process.env.REDDIT_USER,
       password: process.env.REDDIT_PW
     })
@@ -181,16 +181,57 @@ submissionStreams.on('connection', socket => {
           .then(user => {
             botRequester.composeMessage({
               to: user,
-              subject: `Keyword Found: ${submission.title}`,
+              subject: 'Keyword Found!',
               text: submission.url
             });
-          });
+          })
+          .catch(err => console.error(err));
       }
     }
   });
 
+  const userId = socket.user.userId;
+
   socket.on('disconnect', socket => {
     subStream.end();
+
+    if (botRequester) {
+      const sql = `
+            select *
+              from "subscriptions"
+            where "userId" = $1;
+      `;
+
+      const params = [userId];
+
+      db.query(sql, params)
+        .then(result => {
+          const [subscription] = result.rows;
+
+          const sql = subscription
+            ? `
+                update "subscriptions"
+                  set "keywords" = $1,
+                      "subreddits" = $2
+                where "userId" = $3
+            returning *;`
+            : `
+        insert into "subscriptions" ("keywords", "subreddits", "userId")
+                             values ($1, $2, $3)
+                          returning *;`;
+
+          const params = [keywords, subreddits, userId];
+
+          return db
+            .query(sql, params)
+            .then(res => {
+              if (!res.rows[0]) {
+                throw new ClientError(500, 'unexpected error occurred');
+              }
+            });
+        })
+        .catch(err => console.error(err));
+    }
   });
 });
 
