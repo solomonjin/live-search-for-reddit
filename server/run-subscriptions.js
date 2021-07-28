@@ -1,6 +1,7 @@
 require('dotenv/config');
 
 const Snoowrap = require('snoowrap');
+const db = require('./db');
 
 const r = new Snoowrap({
   userAgent: 'keyword finder bot v1.0 by (/u/buddhababy23)',
@@ -11,3 +12,12 @@ const r = new Snoowrap({
 });
 
 r.getMe();
+
+const sql = `
+    select *
+      from "subscriptions";
+`;
+
+db.query(sql)
+  .then(result => {
+  });
