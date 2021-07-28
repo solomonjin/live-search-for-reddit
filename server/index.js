@@ -197,39 +197,17 @@ submissionStreams.on('connection', socket => {
 
     if (botRequester) {
       const sql = `
-            select *
-              from "subscriptions"
-            where "userId" = $1;
-      `;
+        insert into "subscriptions" ("keywords", "subreddits", "userId")
+             values ($1, $2, $3)
+                 on conflict ("userId")
+                 do update
+               set "keywords" = $1,
+                   "subredits" = $2
+         returning *;`;
 
-      const params = [userId];
+      const params = [keywords, subreddits, userId];
 
       db.query(sql, params)
-        .then(result => {
-          const [subscription] = result.rows;
-
-          const sql = subscription
-            ? `
-                update "subscriptions"
-                  set "keywords" = $1,
-                      "subreddits" = $2
-                where "userId" = $3
-            returning *;`
-            : `
-        insert into "subscriptions" ("keywords", "subreddits", "userId")
-                             values ($1, $2, $3)
-                          returning *;`;
-
-          const params = [keywords, subreddits, userId];
-
-          return db
-            .query(sql, params)
-            .then(res => {
-              if (!res.rows[0]) {
-                throw new ClientError(500, 'unexpected error occurred');
-              }
-            });
-        })
         .catch(err => console.error(err));
     }
   });
