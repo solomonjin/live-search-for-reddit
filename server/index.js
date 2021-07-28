@@ -188,7 +188,7 @@ submissionStreams.on('connection', socket => {
                  on conflict ("userId")
                  do update
                set "keywords" = $1,
-                   "subredits" = $2
+                   "subreddits" = $2
          returning *;`;
 
       const params = [keywords, subreddits, userId];
