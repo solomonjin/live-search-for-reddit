@@ -176,6 +176,9 @@ submissionStreams.on('connection', socket => {
     if (connectedAt > submission.created_utc) return;
     if (parsedKw.some(word => submission.title.toLowerCase().includes(word.toLowerCase()))) {
       socket.emit('new_submission', submission);
+      if (botRequester) {
+
+      }
     }
   });
 
