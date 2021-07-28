@@ -64,10 +64,6 @@ export default function Submission(props) {
     setMessageBox(false);
   };
 
-  const openURL = () => {
-    window.open(props.url);
-  };
-
   return (
     <MyPaper className={classes.hover} elevation={3}>
       <Box p={2} pb={0}>
@@ -122,7 +118,7 @@ export default function Submission(props) {
                 />
               </Grid>
               <Grid item xs align="center">
-                <IconButton onClick={openURL}>
+                <IconButton target="_blank" href={props.url}>
                   <OpenInNewIcon color="primary" />
                 </IconButton>
               </Grid>
