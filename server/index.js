@@ -162,7 +162,7 @@ submissionStreams.on('connection', socket => {
 
   const parsedKw = parseKeywords(keywords);
 
-  const botRequester = toggleInbox
+  const botRequester = toggleInbox === 'true'
     ? new Snoowrap({
       userAgent: 'keyword finder bot v1.0 by (/u/buddhababy23)',
       clientId: process.env.SCRIPT_ID,
@@ -176,7 +176,7 @@ submissionStreams.on('connection', socket => {
     if (connectedAt > submission.created_utc) return;
     if (parsedKw.some(word => submission.title.toLowerCase().includes(word.toLowerCase()))) {
       socket.emit('new_submission', submission);
-      if (botRequester) {
+      if (botRequester !== null) {
         socket.user.requester.getMe()
           .then(user => {
             botRequester.composeMessage({
