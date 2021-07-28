@@ -20,7 +20,7 @@ const theme = createTheme({
 export default function App(props) {
   const [user, setUser] = useState(null);
   const [isAuthorizing, setIsAuthorizing] = useState(true);
-  const [searchResults, setSearchResults] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
   const [keywords, setKeywords] = useState('');
   const [subreddits, setSubs] = useState('');
   const [toggleInbox, setToggleInbox] = useState(false);
@@ -49,13 +49,12 @@ export default function App(props) {
     });
 
     socket.on('new_submission', submission => {
-      const copySearchResults = [...searchResults];
-      copySearchResults.unshift(submission);
-      setSearchResults(copySearchResults);
+      setSearchResults([submission, ...searchResults]);
     });
 
     return () => {
       socket.disconnect();
+      setIsSearching(false);
     };
   }, [keywords, subreddits]);
 

@@ -112,6 +112,9 @@ app.use(authorizationMiddleware);
 
 const submissionStreams = io.of('/search').use((socket, next) => {
   parseCookies(socket.request, null, next);
+});
+
+submissionStreams.use((socket, next) => {
   const cookies = socket.request.signedCookies;
   if (!cookies.userToken) {
     next(new ClientError(401, 'authentication required'));
@@ -130,7 +133,7 @@ const submissionStreams = io.of('/search').use((socket, next) => {
     .then(result => {
       const [userInfo] = result.rows;
       if (!userInfo) {
-        throw new ClientError(401, 'user not found');
+        next(new ClientError(401, 'user not found'));
       }
 
       const requester = new Snoowrap({
@@ -144,7 +147,7 @@ const submissionStreams = io.of('/search').use((socket, next) => {
       socket.user = user;
       next();
     })
-    .catch(err => next(err));
+    .catch(next);
 });
 
 submissionStreams.on('connection', socket => {
@@ -152,7 +155,6 @@ submissionStreams.on('connection', socket => {
   if (!keywords || !subreddits || toggleInbox === null) {
     throw new ClientError(400, 'missing search terms');
   }
-
   const connectedAt = Date.now() / 1000;
 
   const subStream = createSearchStream(socket.user.requester, subreddits);
@@ -165,30 +167,15 @@ submissionStreams.on('connection', socket => {
       socket.emit('new_submission', submission);
     }
   });
+
+  socket.on('disconnect', socket => {
+    subStream.end();
+  });
 });
 
-// app.post('/api/search', (req, res, next) => {
-//   const { keywords, subreddits, toggleInbox } = req.body;
-//   if (!keywords || !subreddits || toggleInbox === null) {
-//     throw new ClientError(400, 'missing search terms');
-//   }
-
-//   const submissions = createSearchStream(req.user.requester, subreddits);
-
-//   const submissionsList = [];
-//   const parsedKw = parseKeywords(keywords);
-
-//   submissions.on('item', submission => {
-//     if (parsedKw.some(word => submission.title.toLowerCase().includes(word.toLowerCase()))) {
-//       submissionsList.push(submission);
-//     }
-//     if (submissionsList.length >= 5) submissions.end();
-//   });
-
-//   submissions.on('end', function submissionEnd() {
-//     res.json(submissionsList);
-//   });
-// });
+submissionStreams.on('connect_error', err => {
+  console.error(err);
+});
 
 app.post('/api/comment', (req, res, next) => {
   const { comment, submissionId } = req.body;
