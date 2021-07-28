@@ -271,6 +271,18 @@ app.post('/api/message', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.post('/api/sign-out', (req, res, next) => {
+  res.clearCookie('userToken', {
+    httpOnly: true,
+    signed: true
+  });
+
+  res.json({
+    user: null,
+    userId: null
+  });
+});
+
 app.use(errorMiddleware);
 
 server.listen(process.env.PORT, () => {
