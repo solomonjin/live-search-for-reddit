@@ -78,7 +78,6 @@ export default function Navbar(props) {
             <MenuIcon />
           </IconButton>
           <Typography className={classes.typography} variant="h6" noWrap>{currentPage}</Typography>
-          {/* Search Icon + Form drawer below */}
           <SearchForm />
         </Toolbar>
       </AppBar>

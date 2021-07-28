@@ -20,9 +20,10 @@ CREATE TABLE "public"."users" (
 
 CREATE TABLE "public"."subscriptions" (
 	"subscriptionId" serial NOT NULL,
-	"userId" integer NOT NULL,
+	"userId" integer NOT NULL UNIQUE,
 	"keywords" TEXT NOT NULL,
-	"subreddit" TEXT NOT NULL,
+	"subreddits" TEXT NOT NULL,
+  "createdAt" timestamp with time zone NOT NULL default now(),
 	CONSTRAINT "subscriptions_pk" PRIMARY KEY ("subscriptionId")
 ) WITH (
   OIDS=FALSE

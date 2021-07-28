@@ -77,6 +77,15 @@ export default function App(props) {
     setSearchFormOpen(false);
   };
 
+  const signOut = () => {
+    fetch('/api/sign-out')
+      .then(res => res.json())
+      .then(user => {
+        setUser(null);
+      })
+      .catch(err => console.error(err));
+  };
+
   const submitSearch = (event, kw, subs, inbox) => {
     event.preventDefault();
     setIsSearching(true);
@@ -100,7 +109,8 @@ export default function App(props) {
     openSearchForm,
     closeSearchForm,
     searchFormOpen,
-    isSearching
+    isSearching,
+    signOut
   };
 
   return (

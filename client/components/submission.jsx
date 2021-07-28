@@ -118,7 +118,7 @@ export default function Submission(props) {
                 />
               </Grid>
               <Grid item xs align="center">
-                <IconButton>
+                <IconButton target="_blank" href={props.url}>
                   <OpenInNewIcon color="primary" />
                 </IconButton>
               </Grid>

@@ -64,44 +64,30 @@ app.get('/api/authorize', (req, res, next) => {
         .getMe()
         .then(redditUser => {
           const sql = `
-          select *
-          from "users"
-          where "username" = $1;
-          `;
-          const params = [redditUser.name];
+                insert into "users" ("username", "refreshToken")
+                     values ($1, $2)
+                         on conflict ("username")
+                         do update
+                        set "refreshToken" = $2
+                  returning *;`;
+
+          const params = [redditUser.name, requester.refreshToken];
 
           return db
             .query(sql, params)
             .then(result => {
-              const [user] = result.rows;
-              const sql = user
-                ? `
-                update "users"
-                   set "refreshToken" = $2
-                 where "username" = $1
-             returning *;`
-                : `
-                insert into "users" ("username", "refreshToken")
-                     values ($1, $2)
-                  returning *;`;
-              const params = [redditUser.name, requester.refreshToken];
-
-              return db
-                .query(sql, params)
-                .then(result => {
-                  const { username, userId } = result.rows[0];
-                  const newUser = {
-                    username,
-                    userId
-                  };
-                  const token = jwt.sign(newUser, process.env.TOKEN_SECRET);
-                  const cookieParams = {
-                    httpOnly: true,
-                    signed: true,
-                    maxAge: 365 * 24 * 60 * 60 * 1000
-                  };
-                  res.cookie('userToken', token, cookieParams).redirect('/');
-                });
+              const { username, userId } = result.rows[0];
+              const newUser = {
+                username,
+                userId
+              };
+              const token = jwt.sign(newUser, process.env.TOKEN_SECRET);
+              const cookieParams = {
+                httpOnly: true,
+                signed: true,
+                maxAge: 365 * 24 * 60 * 60 * 1000
+              };
+              res.cookie('userToken', token, cookieParams).redirect('/');
             });
         });
     })
@@ -155,21 +141,61 @@ submissionStreams.on('connection', socket => {
   if (!keywords || !subreddits || toggleInbox === null) {
     throw new ClientError(400, 'missing search terms');
   }
+
   const connectedAt = Date.now() / 1000;
 
   const subStream = createSearchStream(socket.user.requester, subreddits);
 
   const parsedKw = parseKeywords(keywords);
 
+  const botRequester = toggleInbox === 'true'
+    ? new Snoowrap({
+      userAgent: 'keyword finder bot v1.0 by (/u/buddhababy23)',
+      clientId: process.env.SCRIPT_ID,
+      clientSecret: process.env.SCRIPT_SECRET,
+      username: process.env.REDDIT_USER,
+      password: process.env.REDDIT_PW
+    })
+    : null;
+
   subStream.on('item', submission => {
     if (connectedAt > submission.created_utc) return;
     if (parsedKw.some(word => submission.title.toLowerCase().includes(word.toLowerCase()))) {
       socket.emit('new_submission', submission);
+      if (botRequester !== null) {
+        socket.user.requester.getMe()
+          .then(user => {
+            botRequester.composeMessage({
+              to: user,
+              subject: 'Keyword Found!',
+              text: submission.url
+            });
+          })
+          .catch(err => console.error(err));
+      }
     }
   });
 
+  const userId = socket.user.userId;
+
   socket.on('disconnect', socket => {
     subStream.end();
+
+    if (botRequester) {
+      const sql = `
+        insert into "subscriptions" ("keywords", "subreddits", "userId")
+             values ($1, $2, $3)
+                 on conflict ("userId")
+                 do update
+               set "keywords" = $1,
+                   "subreddits" = $2
+         returning *;`;
+
+      const params = [keywords, subreddits, userId];
+
+      db.query(sql, params)
+        .catch(err => console.error(err));
+    }
   });
 });
 
@@ -207,6 +233,18 @@ app.post('/api/message', (req, res, next) => {
       res.status(201).json(userMessage);
     })
     .catch(err => next(err));
+});
+
+app.get('/api/sign-out', (req, res, next) => {
+  res.clearCookie('userToken', {
+    httpOnly: true,
+    signed: true
+  });
+
+  res.json({
+    user: null,
+    userId: null
+  });
 });
 
 app.use(errorMiddleware);
