@@ -55,7 +55,17 @@ db.query(sql)
             text
           };
           return r
-            .composeMessage(message);
+            .composeMessage(message)
+            .then(result => {
+              const sql = `
+                  update "subscriptions"
+                     set "createdAt" = now()
+                   where "subscriptionId" = $1
+              `;
+              const params = [sub.subscriptionId];
+
+              return db.query(sql, params);
+            });
         });
     });
   })
