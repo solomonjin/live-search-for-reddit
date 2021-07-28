@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function MyDrawer(props) {
   const classes = useStyles();
-  const { user } = useContext(AppContext);
+  const { user, signOut, handleSignIn } = useContext(AppContext);
 
   const handleClick = event => {
     if (!props.toggleDrawer) return;
@@ -68,7 +68,7 @@ export default function MyDrawer(props) {
         <ListItemText primary="Search" />
       </ListItem>
       <Divider />
-      <ListItem button onClick={handleClick}>
+      <ListItem button onClick={user ? signOut : handleSignIn}>
         <ListItemIcon>{user ? <LogoutIcon /> : <LoginIcon />}</ListItemIcon>
         <ListItemText primary={user ? 'Sign Out' : 'Sign In'} />
       </ListItem>

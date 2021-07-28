@@ -271,7 +271,7 @@ app.post('/api/message', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.post('/api/sign-out', (req, res, next) => {
+app.get('/api/sign-out', (req, res, next) => {
   res.clearCookie('userToken', {
     httpOnly: true,
     signed: true
