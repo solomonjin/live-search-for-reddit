@@ -82,7 +82,6 @@ export default function App(props) {
       .then(res => res.json())
       .then(user => {
         setUser(null);
-        window.location.reload();
       })
       .catch(err => console.error(err));
   };
