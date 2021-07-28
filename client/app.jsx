@@ -49,7 +49,7 @@ export default function App(props) {
     });
 
     socket.on('new_submission', submission => {
-      setSearchResults([submission, ...searchResults]);
+      setSearchResults(prevSearchResults => [submission, ...prevSearchResults]);
     });
 
     return () => {
