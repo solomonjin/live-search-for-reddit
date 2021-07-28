@@ -46,6 +46,10 @@ db.query(sql)
               url: post.url
             });
           });
+          if (submissions.length === 0) {
+            return updateTime(sub.subscriptionId);
+          }
+
           const text = submissions.reduce((msg, line) => {
             return msg + `[${line.title}](${line.url})` + '\n\n';
           }, '');
@@ -57,16 +61,20 @@ db.query(sql)
           return r
             .composeMessage(message)
             .then(result => {
-              const sql = `
-                  update "subscriptions"
-                     set "createdAt" = now()
-                   where "subscriptionId" = $1
-              `;
-              const params = [sub.subscriptionId];
-
-              return db.query(sql, params);
+              return updateTime(sub.subscriptionId);
             });
         });
     });
   })
   .catch(err => console.error(err));
+
+const updateTime = subId => {
+  const sql = `
+                  update "subscriptions"
+                     set "createdAt" = now()
+                   where "subscriptionId" = $1
+              `;
+  const params = [subId];
+
+  return db.query(sql, params);
+};
