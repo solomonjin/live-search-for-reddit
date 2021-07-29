@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Container, Box, LinearProgress, Grid, Typography, Fade, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { MyPaper, SearchMessage, Submission, CancelDialog } from '../components';
+import { MyPaper, SearchMessage, Submission, CancelDialog, ClearAllDialog } from '../components';
 import AppContext from '../lib/app-context';
 
 const useStyles = makeStyles({
@@ -22,6 +22,7 @@ const useStyles = makeStyles({
 export default function Search(props) {
   const { searchResults, isSearching, keywords } = useContext(AppContext);
   const [toggleCancel, setToggleCancel] = useState(false);
+  const [toggleClearAll, setToggleClearAll] = useState(false);
   const classes = useStyles();
 
   const openCancelMessage = () => {
@@ -30,6 +31,14 @@ export default function Search(props) {
 
   const closeCancelMessage = () => {
     setToggleCancel(false);
+  };
+
+  const openClearAll = () => {
+    setToggleClearAll(true);
+  };
+
+  const closeClearAll = () => {
+    setToggleClearAll(false);
   };
 
   const searching = isSearching
@@ -92,10 +101,18 @@ export default function Search(props) {
             <Grid item xs>
               <Grid container justifyContent="flex-end">
                 <Grid item align="end">
-                  <Button className={classes.button} size="small" variant="contained" color="primary">Clear All</Button>
+                  <Button className={classes.button} size="small"
+                    variant="contained" color="primary"
+                    onClick={openClearAll}
+                  >
+                    {'Clear All'}
+                  </Button>
+                  <ClearAllDialog open={toggleClearAll} onClose={closeClearAll} />
+
                   <Button
                     className={classes.button} size="small" variant="contained"
-                    color="secondary" onClick={openCancelMessage}>
+                    color="secondary" onClick={openCancelMessage}
+                    >
                       {'Cancel'}
                   </Button>
                   <CancelDialog open={toggleCancel} onClose={closeCancelMessage} />
