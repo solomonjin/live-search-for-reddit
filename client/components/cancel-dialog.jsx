@@ -29,8 +29,7 @@ export default function CancelDialog(props) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const classes = useStyles();
-  setLoading(false);
-  setSuccess(false);
+
   return (
     <Dialog
       open={props.open}
@@ -41,7 +40,7 @@ export default function CancelDialog(props) {
     >
       <DialogTitle className={classes.mb30} align="center">Cancel Search?</DialogTitle>
       <DialogActions className={classes.justifyEven}>
-        <Button color="secondary">Cancel</Button>
+        <Button onClick={props.onClose} color="secondary">Cancel</Button>
         <div className={classes.wrapper}>
           <Button
             color="primary"
