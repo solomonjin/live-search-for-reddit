@@ -247,6 +247,10 @@ app.get('/api/sign-out', (req, res, next) => {
   });
 });
 
+app.get('/api/cancel', (req, res, next) => {
+
+});
+
 app.use(errorMiddleware);
 
 server.listen(process.env.PORT, () => {
