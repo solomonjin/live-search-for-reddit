@@ -3,7 +3,7 @@ const { parseKeywords, parseSubs } = require('./createSearchStream');
 const Snoowrap = require('snoowrap');
 const db = require('./db');
 
-const r = new Snoowrap({
+const requester = new Snoowrap({
   userAgent: 'keyword finder bot v1.0 by (/u/buddhababy23)',
   clientId: process.env.SCRIPT_ID,
   clientSecret: process.env.SCRIPT_SECRET,
@@ -54,7 +54,7 @@ const runSubscription = sub => {
     sort: 'new',
     time: 'hour'
   };
-  return r
+  return requester
     .search(searchParams)
     .then(listings => {
       const submissions = [];
@@ -76,7 +76,7 @@ const runSubscription = sub => {
         subject: `${submissions.length} results found`,
         text
       };
-      return r
+      return requester
         .composeMessage(message)
         .then(result => {
           return updateTime(sub.subscriptionId);
