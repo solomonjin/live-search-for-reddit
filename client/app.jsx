@@ -107,6 +107,7 @@ export default function App(props) {
     submitSearch,
     toggleInbox,
     searchResults,
+    setSearchResults,
     openSearchForm,
     closeSearchForm,
     searchFormOpen,
