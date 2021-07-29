@@ -18,7 +18,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default function CancelDialog(props) {
+export default function ClearAllDialog(props) {
   const classes = useStyles();
   const { setSearchResults } = useContext(AppContext);
 

@@ -10,10 +10,11 @@ import SubmissionBody from './submission-body';
 import CommentDialog from './comment-dialog';
 import MessageDialog from './message-dialog';
 import CancelDialog from './cancel-dialog';
+import ClearAllDialog from './clear-all-dialog';
 
 export {
   MyDrawer, MyPaper, Navbar, RedditLogo,
   SearchForm, SearchMessage, SignInButton,
   Submission, SubmissionBody, CommentDialog,
-  MessageDialog, CancelDialog
+  MessageDialog, CancelDialog, ClearAllDialog
 };
