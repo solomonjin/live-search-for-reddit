@@ -22,6 +22,11 @@ export default function ClearAllDialog(props) {
   const classes = useStyles();
   const { setSearchResults } = useContext(AppContext);
 
+  const clearAllResults = () => {
+    setSearchResults([]);
+    props.onClose();
+  };
+
   return (
     <Dialog
       open={props.open}
@@ -33,7 +38,13 @@ export default function ClearAllDialog(props) {
       <DialogTitle className={classes.mb30} align="center">Clear all search results?</DialogTitle>
       <DialogActions className={classes.justifyEven}>
         <Button onClick={props.onClose} color="secondary">Cancel</Button>
-        <Button color="primary" className={classes.sendButton}>Confirm</Button>
+        <Button
+          color="primary"
+          className={classes.sendButton}
+          onClick={clearAllResults}
+        >
+          {'Confirm'}
+        </Button>
       </DialogActions>
     </Dialog>
   );
