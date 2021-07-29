@@ -54,7 +54,6 @@ export default function App(props) {
 
     return () => {
       socket.disconnect();
-      setIsSearching(false);
     };
   }, [keywords, subreddits]);
 
@@ -88,12 +87,12 @@ export default function App(props) {
 
   const submitSearch = (event, kw, subs, inbox) => {
     event.preventDefault();
-    setIsSearching(true);
     history.push('/search');
     closeSearchForm();
     setKeywords(kw);
     setSubs(subs);
     setToggleInbox(inbox);
+    setIsSearching(true);
   };
 
   if (isAuthorizing) return null;
@@ -102,7 +101,9 @@ export default function App(props) {
     user,
     handleSignIn,
     keywords,
+    setKeywords,
     subreddits,
+    setSubs,
     submitSearch,
     toggleInbox,
     searchResults,
@@ -110,6 +111,7 @@ export default function App(props) {
     closeSearchForm,
     searchFormOpen,
     isSearching,
+    setIsSearching,
     signOut
   };
 

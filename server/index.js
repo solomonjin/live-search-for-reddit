@@ -247,6 +247,28 @@ app.get('/api/sign-out', (req, res, next) => {
   });
 });
 
+app.delete('/api/cancel', (req, res, next) => {
+  const { userId } = req.user;
+
+  const sql = `
+      delete from "subscriptions"
+            where "userId" = $1
+        returning *;
+  `;
+
+  const params = [userId];
+
+  db.query(sql, params)
+    .then(result => {
+      const [subscription] = result.rows;
+
+      const payload = subscription || { subscriptionId: null };
+
+      res.json(payload);
+    })
+    .catch(err => next(err));
+});
+
 app.use(errorMiddleware);
 
 server.listen(process.env.PORT, () => {
