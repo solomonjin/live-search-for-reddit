@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Container, Box, LinearProgress, Grid, Typography, Fade, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { MyPaper, SearchMessage, Submission } from '../components';
+import { MyPaper, SearchMessage, Submission, CancelDialog } from '../components';
 import AppContext from '../lib/app-context';
 
 const useStyles = makeStyles({
@@ -21,7 +21,16 @@ const useStyles = makeStyles({
 
 export default function Search(props) {
   const { searchResults, isSearching, keywords } = useContext(AppContext);
+  const [toggleCancel, setToggleCancel] = useState(false);
   const classes = useStyles();
+
+  const openCancelMessage = () => {
+    setToggleCancel(true);
+  };
+
+  const closeCancelMessage = () => {
+    setToggleCancel(false);
+  };
 
   const searching = isSearching
     ? <LinearProgress />
@@ -84,7 +93,12 @@ export default function Search(props) {
               <Grid container justifyContent="flex-end">
                 <Grid item align="end">
                   <Button className={classes.button} size="small" variant="contained" color="primary">Clear All</Button>
-                  <Button className={classes.button} size="small" variant="contained" color="secondary">Cancel</Button>
+                  <Button
+                    className={classes.button} size="small" variant="contained"
+                    color="secondary" onClick={openCancelMessage}>
+                      {'Cancel'}
+                  </Button>
+                  <CancelDialog open={toggleCancel} onClose={closeCancelMessage} />
                 </Grid>
               </Grid>
             </Grid>
