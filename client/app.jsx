@@ -26,6 +26,7 @@ export default function App(props) {
   const [toggleInbox, setToggleInbox] = useState(false);
   const [searchFormOpen, setSearchFormOpen] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [mySocket, setMySocket] = useState(null);
   const history = useHistory();
 
   useEffect(() => {
@@ -51,6 +52,8 @@ export default function App(props) {
     socket.on('new_submission', submission => {
       setSearchResults(prevSearchResults => [submission, ...prevSearchResults]);
     });
+
+    setMySocket(socket);
 
     return () => {
       socket.disconnect();
@@ -110,7 +113,10 @@ export default function App(props) {
     closeSearchForm,
     searchFormOpen,
     isSearching,
-    signOut
+    setIsSearching,
+    signOut,
+    mySocket,
+    setMySocket
   };
 
   return (

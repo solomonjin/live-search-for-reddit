@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Dialog, DialogTitle,
   DialogActions, Button, CircularProgress
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import CheckIcon from '@material-ui/icons/Check';
+import AppContext from '../lib/app-context';
 
 const useStyles = makeStyles({
   wrapper: {
@@ -29,6 +30,32 @@ export default function CancelDialog(props) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const classes = useStyles();
+  const { mySocket, setMySocket, setIsSearching } = useContext(AppContext);
+
+  const cancelSearch = () => {
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+    }
+    mySocket.disconnect();
+    setMySocket(null);
+
+    const req = {
+      method: 'delete'
+    };
+
+    fetch('/api/cancel', req)
+      .then(result => result.json())
+      .then(user => {
+        setLoading(false);
+        setSuccess(true);
+        setTimeout(() => {
+          props.onClose();
+          setSuccess(false);
+          setIsSearching(false);
+        }, 1000);
+      });
+  };
 
   return (
     <Dialog
@@ -44,6 +71,7 @@ export default function CancelDialog(props) {
         <div className={classes.wrapper}>
           <Button
             color="primary"
+            onClick={cancelSearch}
             className={classes.sendButton}
             disabled={loading}
           >
