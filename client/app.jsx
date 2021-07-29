@@ -26,7 +26,6 @@ export default function App(props) {
   const [toggleInbox, setToggleInbox] = useState(false);
   const [searchFormOpen, setSearchFormOpen] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
-  const [mySocket, setMySocket] = useState(null);
   const history = useHistory();
 
   useEffect(() => {
@@ -53,11 +52,8 @@ export default function App(props) {
       setSearchResults(prevSearchResults => [submission, ...prevSearchResults]);
     });
 
-    setMySocket(socket);
-
     return () => {
       socket.disconnect();
-      setIsSearching(false);
     };
   }, [keywords, subreddits]);
 
@@ -91,12 +87,12 @@ export default function App(props) {
 
   const submitSearch = (event, kw, subs, inbox) => {
     event.preventDefault();
-    setIsSearching(true);
     history.push('/search');
     closeSearchForm();
     setKeywords(kw);
     setSubs(subs);
     setToggleInbox(inbox);
+    setIsSearching(true);
   };
 
   if (isAuthorizing) return null;
@@ -105,7 +101,9 @@ export default function App(props) {
     user,
     handleSignIn,
     keywords,
+    setKeywords,
     subreddits,
+    setSubs,
     submitSearch,
     toggleInbox,
     searchResults,
@@ -114,9 +112,7 @@ export default function App(props) {
     searchFormOpen,
     isSearching,
     setIsSearching,
-    signOut,
-    mySocket,
-    setMySocket
+    signOut
   };
 
   return (

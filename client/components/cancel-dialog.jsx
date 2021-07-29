@@ -30,15 +30,15 @@ export default function CancelDialog(props) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const classes = useStyles();
-  const { mySocket, setMySocket, setIsSearching } = useContext(AppContext);
+  const { setIsSearching, setSubs } = useContext(AppContext);
 
   const cancelSearch = () => {
     if (!loading) {
       setSuccess(false);
       setLoading(true);
     }
-    mySocket.disconnect();
-    setMySocket(null);
+
+    setSubs('');
 
     const req = {
       method: 'delete'
