@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Container, Box, LinearProgress, Grid, Typography, Fade, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { MyPaper, SearchMessage, Submission, CancelDialog, ClearAllDialog } from '../components';
+import { MyPaper, SearchMessage, Submission, CancelDialog, ClearAllDialog, VolumeControl } from '../components';
 import AppContext from '../lib/app-context';
 
 const useStyles = makeStyles({
@@ -93,6 +93,7 @@ export default function Search(props) {
   return (
     <Fade in>
       <Container className={classes.root} maxWidth="xl">
+        <VolumeControl />
         <Box m={1}>
           <Grid container justifyContent="space-between" alignItems="flex-end">
             <Grid item xs={2}>
