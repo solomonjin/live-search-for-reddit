@@ -25,10 +25,13 @@ export default function App(props) {
   const [subreddits, setSubs] = useState('');
   const [toggleInbox, setToggleInbox] = useState(false);
   const [searchFormOpen, setSearchFormOpen] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
+  const [isSearching, setIsSearching] = useState(null);
   const history = useHistory();
 
   useEffect(() => {
+    if (window.location.search) {
+      setIsSearching(window.location.search);
+    }
     fetch('/api/auth')
       .then(res => res.json())
       .then(result => {
