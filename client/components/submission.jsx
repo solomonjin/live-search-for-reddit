@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import MailIcon from '@material-ui/icons/Mail';
 import InsertCommentIcon from '@material-ui/icons/InsertComment';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import DeleteIcon from '@material-ui/icons/Delete';
 import formatDate from '../lib/format-date';
 import Highlighter from 'react-highlight-words';
 import { parseKeywords } from '../../server/createSearchStream';
@@ -120,11 +119,6 @@ export default function Submission(props) {
               <Grid item xs align="center">
                 <IconButton target="_blank" href={props.url}>
                   <OpenInNewIcon color="primary" />
-                </IconButton>
-              </Grid>
-              <Grid item xs align="center">
-                <IconButton>
-                  <DeleteIcon color="primary" />
                 </IconButton>
               </Grid>
             </Grid>
