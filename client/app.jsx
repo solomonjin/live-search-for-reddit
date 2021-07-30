@@ -41,13 +41,19 @@ export default function App(props) {
   }, []);
 
   useEffect(() => {
-    if (keywords === '' || subreddits === '') return;
+    const params = new URLSearchParams(window.location.search);
+
+    const kw = params.get('keywords');
+    const subs = params.get('subreddits');
+    const inbox = params.get('toggleInbox');
+
+    if (kw === '' || subs === '' || inbox === '') return;
 
     const socket = io('/search', {
       query: {
-        keywords,
-        subreddits,
-        toggleInbox
+        keywords: kw,
+        subreddits: subs,
+        toggleInbox: inbox
       }
     });
 
@@ -58,7 +64,7 @@ export default function App(props) {
     return () => {
       socket.disconnect();
     };
-  }, [keywords, subreddits]);
+  }, [isSearching]);
 
   const handleSignIn = event => {
     event.preventDefault();
