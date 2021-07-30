@@ -128,7 +128,8 @@ export default function App(props) {
     searchFormOpen,
     isSearching,
     setIsSearching,
-    signOut
+    signOut,
+    history
   };
 
   return (
