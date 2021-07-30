@@ -73,6 +73,24 @@ export default function App(props) {
     };
   }, [isSearching]);
 
+  useEffect(() => {
+    if (searchResults.length === 0) return;
+
+    const titleInterval = setInterval(() => {
+      document.title = document.title === 'Result Found!'
+        ? 'Keyword Finder for Reddit'
+        : 'Result Found!';
+    }, 1000);
+
+    window.onmousemove = () => {
+      clearInterval(titleInterval);
+    };
+
+    return () => {
+      clearInterval(titleInterval);
+    };
+  }, [searchResults]);
+
   const handleSignIn = event => {
     event.preventDefault();
     fetch('/api/sign-in')
