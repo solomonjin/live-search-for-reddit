@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Home, AuthPage, Search } from './pages';
 import AppContext from './lib/app-context';
 import Navbar from './components/navbar';
@@ -26,6 +26,7 @@ export default function App(props) {
   const [toggleInbox, setToggleInbox] = useState(false);
   const [searchFormOpen, setSearchFormOpen] = useState(false);
   const [isSearching, setIsSearching] = useState(null);
+  const notifSound = useRef(new Audio('/audio/notification.wav'));
   const history = useHistory();
 
   useEffect(() => {
