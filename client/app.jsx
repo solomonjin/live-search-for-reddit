@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Home, AuthPage, Search } from './pages';
 import AppContext from './lib/app-context';
 import Navbar from './components/navbar';
@@ -26,6 +26,7 @@ export default function App(props) {
   const [toggleInbox, setToggleInbox] = useState(false);
   const [searchFormOpen, setSearchFormOpen] = useState(false);
   const [isSearching, setIsSearching] = useState(null);
+  const notifSound = useRef(new Audio('/audio/notification.wav'));
   const history = useHistory();
 
   useEffect(() => {
@@ -64,12 +65,31 @@ export default function App(props) {
 
     socket.on('new_submission', submission => {
       setSearchResults(prevSearchResults => [submission, ...prevSearchResults]);
+      notifSound.current.play();
     });
 
     return () => {
       socket.disconnect();
     };
   }, [isSearching]);
+
+  useEffect(() => {
+    if (searchResults.length === 0) return;
+
+    const titleInterval = setInterval(() => {
+      document.title = document.title === 'Result Found!'
+        ? 'Keyword Finder for Reddit'
+        : 'Result Found!';
+    }, 1000);
+
+    window.onmousemove = () => {
+      clearInterval(titleInterval);
+    };
+
+    return () => {
+      clearInterval(titleInterval);
+    };
+  }, [searchResults]);
 
   const handleSignIn = event => {
     event.preventDefault();
