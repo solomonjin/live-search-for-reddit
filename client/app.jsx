@@ -65,6 +65,7 @@ export default function App(props) {
 
     socket.on('new_submission', submission => {
       setSearchResults(prevSearchResults => [submission, ...prevSearchResults]);
+      notifSound.current.play();
     });
 
     return () => {
