@@ -30,7 +30,7 @@ export default function CancelDialog(props) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const classes = useStyles();
-  const { setIsSearching, setSubs } = useContext(AppContext);
+  const { setIsSearching, setSubs, history } = useContext(AppContext);
 
   const cancelSearch = () => {
     if (!loading) {
@@ -52,7 +52,8 @@ export default function CancelDialog(props) {
         setTimeout(() => {
           props.onClose();
           setSuccess(false);
-          setIsSearching(false);
+          history.push('/search');
+          setIsSearching(null);
         }, 1000);
       });
   };

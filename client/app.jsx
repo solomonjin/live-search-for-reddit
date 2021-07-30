@@ -25,10 +25,18 @@ export default function App(props) {
   const [subreddits, setSubs] = useState('');
   const [toggleInbox, setToggleInbox] = useState(false);
   const [searchFormOpen, setSearchFormOpen] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
+  const [isSearching, setIsSearching] = useState(null);
   const history = useHistory();
 
   useEffect(() => {
+    if (window.location.search) {
+      setIsSearching(window.location.search);
+      const params = new URLSearchParams(window.location.search);
+      setKeywords(params.get('keywords'));
+      setSubs(params.get('subscriptions'));
+      const inbox = params.get('toggleInbox') === 'true';
+      setToggleInbox(inbox);
+    }
     fetch('/api/auth')
       .then(res => res.json())
       .then(result => {
@@ -38,13 +46,19 @@ export default function App(props) {
   }, []);
 
   useEffect(() => {
-    if (keywords === '' || subreddits === '') return;
+    const params = new URLSearchParams(window.location.search);
+
+    const kw = params.get('keywords');
+    const subs = params.get('subreddits');
+    const inbox = params.get('toggleInbox');
+
+    if (!kw || !subs || !inbox) return;
 
     const socket = io('/search', {
       query: {
-        keywords,
-        subreddits,
-        toggleInbox
+        keywords: kw,
+        subreddits: subs,
+        toggleInbox: inbox
       }
     });
 
@@ -55,7 +69,7 @@ export default function App(props) {
     return () => {
       socket.disconnect();
     };
-  }, [keywords, subreddits]);
+  }, [isSearching]);
 
   const handleSignIn = event => {
     event.preventDefault();
@@ -87,12 +101,13 @@ export default function App(props) {
 
   const submitSearch = (event, kw, subs, inbox) => {
     event.preventDefault();
-    history.push('/search');
+    const queryString = `/search?keywords=${kw}&subreddits=${subs}&toggleInbox=${inbox}`;
+    history.push(queryString);
     closeSearchForm();
     setKeywords(kw);
     setSubs(subs);
     setToggleInbox(inbox);
-    setIsSearching(true);
+    setIsSearching(queryString);
   };
 
   if (isAuthorizing) return null;
@@ -113,7 +128,8 @@ export default function App(props) {
     searchFormOpen,
     isSearching,
     setIsSearching,
-    signOut
+    signOut,
+    history
   };
 
   return (
