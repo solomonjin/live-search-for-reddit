@@ -149,7 +149,8 @@ export default function App(props) {
     isSearching,
     setIsSearching,
     signOut,
-    history
+    history,
+    notifSound
   };
 
   return (
