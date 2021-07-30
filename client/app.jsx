@@ -31,6 +31,11 @@ export default function App(props) {
   useEffect(() => {
     if (window.location.search) {
       setIsSearching(window.location.search);
+      const params = new URLSearchParams(window.location.search);
+      setKeywords(params.get('keywords'));
+      setSubs(params.get('subscriptions'));
+      const inbox = params.get('toggleInbox') === 'true';
+      setToggleInbox(inbox);
     }
     fetch('/api/auth')
       .then(res => res.json())
@@ -47,7 +52,7 @@ export default function App(props) {
     const subs = params.get('subreddits');
     const inbox = params.get('toggleInbox');
 
-    if (kw === '' || subs === '' || inbox === '') return;
+    if (!kw || !subs || !inbox) return;
 
     const socket = io('/search', {
       query: {
@@ -96,12 +101,13 @@ export default function App(props) {
 
   const submitSearch = (event, kw, subs, inbox) => {
     event.preventDefault();
-    history.push('/search');
+    const queryString = `/search?keywords=${kw}&subreddits=${subs}&toggleInbox=${inbox}`;
+    history.push(queryString);
     closeSearchForm();
     setKeywords(kw);
     setSubs(subs);
     setToggleInbox(inbox);
-    setIsSearching(true);
+    setIsSearching(queryString);
   };
 
   if (isAuthorizing) return null;
