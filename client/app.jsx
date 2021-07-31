@@ -76,17 +76,21 @@ export default function App(props) {
   useEffect(() => {
     if (searchResults.length === 0) return;
 
+    const defaultTitle = 'Keyword Finder for Reddit';
+
     const titleInterval = setInterval(() => {
       document.title = document.title === 'Result Found!'
-        ? 'Keyword Finder for Reddit'
+        ? defaultTitle
         : 'Result Found!';
     }, 1000);
 
     window.onmousemove = () => {
+      document.title = defaultTitle;
       clearInterval(titleInterval);
     };
 
     return () => {
+      document.title = defaultTitle;
       clearInterval(titleInterval);
     };
   }, [searchResults]);
@@ -149,7 +153,8 @@ export default function App(props) {
     isSearching,
     setIsSearching,
     signOut,
-    history
+    history,
+    notifSound
   };
 
   return (
