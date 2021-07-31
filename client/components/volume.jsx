@@ -35,7 +35,7 @@ export default function VolumeControl(props) {
   return (
     <ClickAwayListener onClickAway={closeControls}>
       <Grid container justifyContent="flex-end" alignItems="center">
-        <Grid item xs={2} align="center">
+        <Grid item xs={9} align="end">
           <Fade in={toggleVolume}>
             <Slider
               value={volume}
@@ -43,7 +43,7 @@ export default function VolumeControl(props) {
             />
           </Fade>
         </Grid>
-        <Grid item xs={1} align="center">
+        <Grid item xs={3} align="end">
           <IconButton
             style={{ color: '#87ADCB' }}
             onClick={handleClick}

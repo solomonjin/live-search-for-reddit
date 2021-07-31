@@ -6,7 +6,9 @@ import AppContext from '../lib/app-context';
 
 const useStyles = makeStyles({
   root: {
-    paddingTop: '65px'
+    paddingTop: '65px',
+    paddingLeft: 0,
+    paddingRight: 0
   },
   searchText: {
     opacity: '50%'
@@ -15,7 +17,7 @@ const useStyles = makeStyles({
     visibility: 'hidden'
   },
   button: {
-    margin: '0 5px'
+    marginLeft: '10px'
   }
 });
 
@@ -93,8 +95,13 @@ export default function Search(props) {
   return (
     <Fade in>
       <Container className={classes.root} maxWidth="xl">
-        <VolumeControl />
-        <Box m={1}>
+        <Grid container>
+          <Grid item xs={6} md={8} />
+          <Grid item xs={6} md={4}>
+            <VolumeControl />
+          </Grid>
+        </Grid>
+        <Box mt={1} mb={1}>
           <Grid container justifyContent="space-between" alignItems="flex-end">
             <Grid item xs={2}>
               <Typography className={classes.searchText} variant="body1">{message}</Typography>
