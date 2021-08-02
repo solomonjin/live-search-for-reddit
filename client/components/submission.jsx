@@ -89,7 +89,7 @@ export default function Submission(props) {
               </Typography>
             </Grid>
           </Box>
-          <Grid item xs={12}>
+          <Grid item xs={12} zeroMinWidth>
             <Collapse in={toggleBody}>
               <SubmissionBody text={props.text} />
             </Collapse>
