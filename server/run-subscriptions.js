@@ -1,5 +1,5 @@
 require('dotenv/config');
-const { parseKeywords, parseSubs } = require('./create-search-stream');
+const { parseKeywords, parseSubs } = require('./createSearchStream');
 const Snoowrap = require('snoowrap');
 const db = require('./db');
 

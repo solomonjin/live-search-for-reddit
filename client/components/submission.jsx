@@ -7,7 +7,7 @@ import InsertCommentIcon from '@material-ui/icons/InsertComment';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import formatDate from '../lib/format-date';
 import Highlighter from 'react-highlight-words';
-import { parseKeywords } from '../../server/create-search-stream';
+import { parseKeywords } from '../../server/createSearchStream';
 
 const useStyles = makeStyles({
   root: {
@@ -89,7 +89,7 @@ export default function Submission(props) {
               </Typography>
             </Grid>
           </Box>
-          <Grid item xs={12} zeroMinWidth>
+          <Grid item xs={12}>
             <Collapse in={toggleBody}>
               <SubmissionBody text={props.text} />
             </Collapse>
