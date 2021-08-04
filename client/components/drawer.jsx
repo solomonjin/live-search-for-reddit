@@ -37,7 +37,7 @@ export default function MyDrawer(props) {
         <ListItem button onClick={demoSignIn}>
           <ListItemIcon><PersonIcon /></ListItemIcon>
           <ListItemText primary="Demo Account" />
-        </ListItem>;
+        </ListItem>
       </>;
 
   return (
