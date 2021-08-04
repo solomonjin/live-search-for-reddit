@@ -119,14 +119,6 @@ app.get('/api/authorize', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.get('/sign-in', (req, res) => {
-  res.sendFile('/index.html', {
-    root: path.join(__dirname, 'public')
-  });
-});
-
-app.use(authorizationMiddleware);
-
 const submissionStreams = io.of('/search').use((socket, next) => {
   parseCookies(socket.request, null, next);
 });
@@ -244,7 +236,7 @@ submissionStreams.on('connect_error', err => {
   console.error(err);
 });
 
-app.post('/api/comment', (req, res, next) => {
+app.post('/api/comment', authorizationMiddleware, (req, res, next) => {
   const { comment, submissionId } = req.body;
   if (!comment || !submissionId) {
     throw new ClientError(400, 'invalid request');
@@ -257,7 +249,7 @@ app.post('/api/comment', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.post('/api/message', (req, res, next) => {
+app.post('/api/message', authorizationMiddleware, (req, res, next) => {
   const { author, message, subject } = req.body;
   if (!author || !message || !subject) {
     throw new ClientError(400, 'invalid request');
@@ -276,7 +268,7 @@ app.post('/api/message', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.get('/api/sign-out', (req, res, next) => {
+app.get('/api/sign-out', authorizationMiddleware, (req, res, next) => {
   res.clearCookie('userToken', {
     httpOnly: true,
     signed: true
@@ -288,7 +280,7 @@ app.get('/api/sign-out', (req, res, next) => {
   });
 });
 
-app.delete('/api/cancel', (req, res, next) => {
+app.delete('/api/cancel', authorizationMiddleware, (req, res, next) => {
   const { userId } = req.user;
 
   const sql = `
