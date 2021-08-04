@@ -9,6 +9,7 @@ import InboxIcon from '@material-ui/icons/Inbox';
 import SearchIcon from '@material-ui/icons/Search';
 import LoginIcon from '@material-ui/icons/Login';
 import LogoutIcon from '@material-ui/icons/Logout';
+import PersonIcon from '@material-ui/icons/Person';
 import { makeStyles } from '@material-ui/core/styles';
 import AppContext from '../lib/app-context';
 import { Link } from 'react-router-dom';
@@ -22,12 +23,22 @@ const useStyles = makeStyles(theme => ({
 
 export default function MyDrawer(props) {
   const classes = useStyles();
-  const { user, signOut, handleSignIn } = useContext(AppContext);
+  const { user, signOut, handleSignIn, demoSignIn } = useContext(AppContext);
 
   const handleClick = event => {
     if (!props.toggleDrawer) return;
     props.toggleDrawer();
   };
+
+  const demoAccount = user
+    ? <></>
+    : <>
+        <Divider />
+        <ListItem button onClick={demoSignIn}>
+          <ListItemIcon><PersonIcon /></ListItemIcon>
+          <ListItemText primary="Demo Account" />
+        </ListItem>;
+      </>;
 
   return (
   <>
@@ -72,6 +83,7 @@ export default function MyDrawer(props) {
         <ListItemIcon>{user ? <LogoutIcon /> : <LoginIcon />}</ListItemIcon>
         <ListItemText primary={user ? 'Sign Out' : 'Sign In'} />
       </ListItem>
+      {demoAccount}
     </List>
   </>);
 }

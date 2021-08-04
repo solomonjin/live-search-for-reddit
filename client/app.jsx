@@ -106,6 +106,15 @@ export default function App(props) {
       .catch(err => console.error(err));
   };
 
+  const demoSignIn = () => {
+    fetch('/api/demo-sign-in')
+      .then(res => res.json())
+      .then(result => {
+        setUser(result.username);
+      })
+      .catch(err => console.error(err));
+  };
+
   const openSearchForm = () => {
     setSearchFormOpen(!searchFormOpen);
   };
@@ -139,6 +148,7 @@ export default function App(props) {
   const newContext = {
     user,
     handleSignIn,
+    demoSignIn,
     keywords,
     setKeywords,
     subreddits,

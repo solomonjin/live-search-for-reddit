@@ -36,6 +36,30 @@ app.get('/api/auth', (req, res, next) => {
   res.json(payload);
 });
 
+app.get('/api/demo-sign-in', (req, res, next) => {
+  const sql = `
+      select *
+        from "users"
+       where "username" = $1;
+  `;
+
+  const params = [process.env.DEMO_USER];
+
+  db.query(sql, params)
+    .then(result => {
+      const { username, userId } = result.rows[0];
+      const newUser = { username, userId };
+      const token = jwt.sign(newUser, process.env.TOKEN_SECRET);
+      const cookieParams = {
+        httpOnly: true,
+        signed: true,
+        maxAge: 7 * 24 * 60 * 60 * 1000
+      };
+
+      res.cookie('userToken', token, cookieParams).json(newUser);
+    });
+});
+
 app.get('/api/sign-in', (req, res, next) => {
   res.set('Access-Control-Allow-Origin', '*');
   res.json(Snoowrap.getAuthUrl({
@@ -122,10 +146,20 @@ submissionStreams.use((socket, next) => {
         next(new ClientError(401, 'user not found'));
       }
 
+      let clientId;
+      let clientSecret;
+      if (userInfo.username === process.env.DEMO_USER) {
+        clientId = process.env.DEMO_ID;
+        clientSecret = process.env.DEMO_SECRET;
+      } else {
+        clientId = process.env.CLIENT_ID;
+        clientSecret = process.env.CLIENT_SECRET;
+      }
+
       const requester = new Snoowrap({
         userAgent: 'keyword finder app v1.0 (by /u/buddhababy23)',
-        clientId: process.env.CLIENT_ID,
-        clientSecret: process.env.CLIENT_SECRET,
+        clientId,
+        clientSecret,
         refreshToken: userInfo.refreshToken
       });
 

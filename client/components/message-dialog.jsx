@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Dialog, DialogTitle, DialogContent,
   DialogActions, TextField, Button, CircularProgress
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import CheckIcon from '@material-ui/icons/Check';
+import AppContext from '../lib/app-context';
 
 const useStyles = makeStyles({
   wrapper: {
@@ -27,6 +28,7 @@ export default function MessageDialog(props) {
   const [subject, setSubject] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { user } = useContext(AppContext);
   const classes = useStyles();
 
   const changeMessage = event => {
@@ -75,6 +77,8 @@ export default function MessageDialog(props) {
       .catch(err => console.error(err));
   };
 
+  const demoUser = user === 'DemoFindKeyword';
+
   return (
     <Dialog
       open={props.open}
@@ -105,7 +109,7 @@ export default function MessageDialog(props) {
             color="primary"
             onClick={sendMessage}
             className={classes.sendButton}
-            disabled={loading}
+            disabled={loading || demoUser}
           >
             {success ? <CheckIcon color="primary" /> : 'Send'}
             {loading && <CircularProgress size={24} className={classes.buttonLoading} />}
