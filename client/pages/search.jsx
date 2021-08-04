@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/styles';
 import { MyPaper, SearchMessage, Submission, CancelDialog, ClearAllDialog, VolumeControl } from '../components';
 import AppContext from '../lib/app-context';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   root: {
     paddingTop: '65px',
     paddingLeft: 0,
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   button: {
     marginLeft: '10px'
   }
-}));
+});
 
 export default function Search(props) {
   const { searchResults, isSearching, keywords } = useContext(AppContext);
@@ -74,7 +74,7 @@ export default function Search(props) {
     <Fade in>
       <Grid container spacing={3}>
         {searchResults.map(post =>
-          <Grid item xs={12} sm={12} md={6} key={post.id} zeroMinWidth>
+          <Grid item sm={12} md={6} key={post.id}>
             <Submission
               title={post.title}
               author={post.author}
