@@ -25,10 +25,21 @@ function authorizationMiddleware(req, res, next) {
         throw new ClientError(401, 'user not found');
       }
 
+      let clientId;
+      let clientSecret;
+
+      if (userInfo.username === process.env.DEMO_USER) {
+        clientId = process.env.DEMO_ID;
+        clientSecret = process.env.DEMO_SECRET;
+      } else {
+        clientId = process.env.CLIENT_ID;
+        clientSecret = process.env.CLIENT_SECRET;
+      }
+
       const requester = new Snoowrap({
         userAgent: 'keyword finder app v1.0 (by /u/buddhababy23)',
-        clientId: process.env.CLIENT_ID,
-        clientSecret: process.env.CLIENT_SECRET,
+        clientId,
+        clientSecret,
         refreshToken: userInfo.refreshToken
       });
 

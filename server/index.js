@@ -56,7 +56,7 @@ app.get('/api/demo-sign-in', (req, res, next) => {
         maxAge: 7 * 24 * 60 * 60 * 1000
       };
 
-      res.cookie('userToken', token, cookieParams).redirect('/');
+      res.cookie('userToken', token, cookieParams).json(newUser);
     });
 });
 
@@ -146,10 +146,20 @@ submissionStreams.use((socket, next) => {
         next(new ClientError(401, 'user not found'));
       }
 
+      let clientId;
+      let clientSecret;
+      if (userInfo.username === process.env.DEMO_USER) {
+        clientId = process.env.DEMO_ID;
+        clientSecret = process.env.DEMO_SECRET;
+      } else {
+        clientId = process.env.CLIENT_ID;
+        clientSecret = process.env.CLIENT_SECRET;
+      }
+
       const requester = new Snoowrap({
         userAgent: 'keyword finder app v1.0 (by /u/buddhababy23)',
-        clientId: process.env.CLIENT_ID,
-        clientSecret: process.env.CLIENT_SECRET,
+        clientId,
+        clientSecret,
         refreshToken: userInfo.refreshToken
       });
 
