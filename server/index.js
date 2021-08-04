@@ -11,6 +11,7 @@ const cookieParser = require('cookie-parser');
 const Snoowrap = require('snoowrap');
 const ClientError = require('./client-error');
 const db = require('./db');
+const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
@@ -65,7 +66,7 @@ app.get('/api/sign-in', (req, res, next) => {
   res.json(Snoowrap.getAuthUrl({
     clientId: process.env.CLIENT_ID,
     scope: ['identity', 'privatemessages', 'read', 'submit'],
-    redirectUri: 'http://localhost:3000/api/authorize',
+    redirectUri: 'https://live-search-for-reddit.herokuapp.com/api/authorize',
     permanent: true
   }));
 });
@@ -81,7 +82,7 @@ app.get('/api/authorize', (req, res, next) => {
     userAgent: 'keyword finder app v1.0 (by /u/buddhabab23',
     clientId: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    redirectUri: 'http://localhost:3000/api/authorize'
+    redirectUri: 'https://live-search-for-reddit.herokuapp.com/api/authorize'
   })
     .then(requester => {
       return requester
@@ -301,6 +302,12 @@ app.delete('/api/cancel', (req, res, next) => {
       res.json(payload);
     })
     .catch(err => next(err));
+});
+
+app.use((req, res) => {
+  res.sendFile('/index.html', {
+    root: path.join(__dirname, 'public')
+  });
 });
 
 app.use(errorMiddleware);
