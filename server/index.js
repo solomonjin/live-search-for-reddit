@@ -119,6 +119,12 @@ app.get('/api/authorize', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/sign-in', (req, res) => {
+  res.sendFile('/index.html', {
+    root: path.join(__dirname, 'public')
+  });
+});
+
 app.use(authorizationMiddleware);
 
 const submissionStreams = io.of('/search').use((socket, next) => {
