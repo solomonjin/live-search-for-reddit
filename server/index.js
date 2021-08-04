@@ -11,6 +11,7 @@ const cookieParser = require('cookie-parser');
 const Snoowrap = require('snoowrap');
 const ClientError = require('./client-error');
 const db = require('./db');
+const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
@@ -301,6 +302,12 @@ app.delete('/api/cancel', (req, res, next) => {
       res.json(payload);
     })
     .catch(err => next(err));
+});
+
+app.use((req, res) => {
+  res.sendFile('/index.html', {
+    root: path.join(__dirname, 'public')
+  });
 });
 
 app.use(errorMiddleware);
