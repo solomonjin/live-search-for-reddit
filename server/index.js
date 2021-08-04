@@ -66,7 +66,7 @@ app.get('/api/sign-in', (req, res, next) => {
   res.json(Snoowrap.getAuthUrl({
     clientId: process.env.CLIENT_ID,
     scope: ['identity', 'privatemessages', 'read', 'submit'],
-    redirectUri: 'http://localhost:3000/api/authorize',
+    redirectUri: 'https://live-search-for-reddit.herokuapp.com/api/authorize',
     permanent: true
   }));
 });
@@ -82,7 +82,7 @@ app.get('/api/authorize', (req, res, next) => {
     userAgent: 'keyword finder app v1.0 (by /u/buddhabab23',
     clientId: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    redirectUri: 'http://localhost:3000/api/authorize'
+    redirectUri: 'https://live-search-for-reddit.herokuapp.com/api/authorize'
   })
     .then(requester => {
       return requester
