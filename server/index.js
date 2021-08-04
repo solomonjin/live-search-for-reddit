@@ -36,6 +36,30 @@ app.get('/api/auth', (req, res, next) => {
   res.json(payload);
 });
 
+app.get('/api/demo-sign-in', (req, res, next) => {
+  const sql = `
+      select *
+        from "users"
+       where "username" = $1;
+  `;
+
+  const params = [process.env.DEMO_USER];
+
+  db.query(sql, params)
+    .then(result => {
+      const { username, userId } = result.rows[0];
+      const newUser = { username, userId };
+      const token = jwt.sign(newUser, process.env.TOKEN_SECRET);
+      const cookieParams = {
+        httpOnly: true,
+        signed: true,
+        maxAge: 7 * 24 * 60 * 60 * 1000
+      };
+
+      res.cookie('userToken', token, cookieParams).redirect('/');
+    });
+});
+
 app.get('/api/sign-in', (req, res, next) => {
   res.set('Access-Control-Allow-Origin', '*');
   res.json(Snoowrap.getAuthUrl({
