@@ -7,7 +7,7 @@ import InsertCommentIcon from '@material-ui/icons/InsertComment';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import formatDate from '../lib/format-date';
 import Highlighter from 'react-highlight-words';
-import { parseKeywords } from '../../server/createSearchStream';
+import { parseKeywords } from '../../server/create-search-stream';
 
 const useStyles = makeStyles({
   root: {
