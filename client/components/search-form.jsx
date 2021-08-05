@@ -83,13 +83,13 @@ export default function SearchForm(props) {
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
                       <TextField fullWidth required
-                        variant="outlined" label="Keywords"
+                        label="Keywords"
                         placeholder="Separated by commas"
                         onChange={changeKeywords} value={keywords} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField fullWidth required
-                        variant="outlined" label="Subreddits"
+                        label="Subreddits"
                         placeholder="Separated by commas"
                         onChange={changeSubs} value={subreddits} />
                     </Grid>
