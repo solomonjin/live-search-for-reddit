@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Home, AuthPage, Search } from './pages';
 import AppContext from './lib/app-context';
-import Navbar from './components/navbar';
+import { Navbar, NetworkAlert } from './components';
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { io } from 'socket.io-client';
@@ -26,6 +26,7 @@ export default function App(props) {
   const [toggleInbox, setToggleInbox] = useState(false);
   const [searchFormOpen, setSearchFormOpen] = useState(false);
   const [isSearching, setIsSearching] = useState(null);
+  const [isError, setIsError] = useState(false);
   const notifSound = useRef(new Audio('/audio/notification.wav'));
   const history = useHistory();
 
@@ -143,6 +144,14 @@ export default function App(props) {
     setIsSearching(queryString);
   };
 
+  const hideError = () => {
+    setIsError(false);
+  };
+
+  const showError = () => {
+    setIsError(true);
+  };
+
   if (isAuthorizing) return null;
 
   const newContext = {
@@ -164,7 +173,8 @@ export default function App(props) {
     setIsSearching,
     signOut,
     history,
-    notifSound
+    notifSound,
+    showError
   };
 
   return (
@@ -182,6 +192,11 @@ export default function App(props) {
               {user ? <Search /> : <Redirect to="/sign-in" />}
             </Route>
           </Switch>
+          <NetworkAlert
+            open={isError}
+            autoHideDuration={6000}
+            onClose={hideError}
+          />
         </Navbar>
       </AppContext.Provider>
     </ThemeProvider>

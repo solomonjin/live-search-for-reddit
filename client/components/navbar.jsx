@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { AppBar, Drawer, Hidden, Toolbar, IconButton, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
-import MyDrawer from './drawer';
-import SearchForm from './search-form';
+import { MyDrawer, SearchForm } from '.';
 import { useLocation } from 'react-router-dom';
 
 const drawerWidth = 240;

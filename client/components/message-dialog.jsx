@@ -28,7 +28,7 @@ export default function MessageDialog(props) {
   const [subject, setSubject] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const { user } = useContext(AppContext);
+  const { user, showError } = useContext(AppContext);
   const classes = useStyles();
 
   const changeMessage = event => {
@@ -39,7 +39,8 @@ export default function MessageDialog(props) {
     setSubject(event.target.value);
   };
 
-  const cancelMessage = () => {
+  const cancelMessage = event => {
+    event.preventDefault();
     props.onClose();
     setMessage('');
     setSubject('');
@@ -47,7 +48,8 @@ export default function MessageDialog(props) {
     setSuccess(false);
   };
 
-  const sendMessage = () => {
+  const sendMessage = event => {
+    event.preventDefault();
     if (!loading) {
       setSuccess(false);
       setLoading(true);
@@ -65,6 +67,12 @@ export default function MessageDialog(props) {
     fetch('/api/message', req)
       .then(res => res.json())
       .then(message => {
+        if (!message.success) {
+          setSuccess(false);
+          setLoading(false);
+          showError();
+          return;
+        }
         setLoading(false);
         setSuccess(true);
         setTimeout(() => {
@@ -74,7 +82,10 @@ export default function MessageDialog(props) {
           setSubject('');
         }, 1000);
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        console.error(err);
+        showError();
+      });
   };
 
   const demoUser = user === 'DemoFindKeyword';
@@ -88,34 +99,36 @@ export default function MessageDialog(props) {
       PaperProps={{ style: { borderRadius: 8 } }}
     >
       <DialogTitle align="center">Send Message</DialogTitle>
-      <DialogContent>
-        <TextField fullWidth required
-          variant="outlined" label="Subject"
-          onChange={changeSubject}
-          value={subject}
-          className={classes.inputBox}
-        />
-        <TextField fullWidth required
-          variant="outlined" label="Message"
-          onChange={changeMessage}
-          multiline rows={4}
-          value={message}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button color="secondary" onClick={cancelMessage}>Cancel</Button>
-        <div className={classes.wrapper}>
-          <Button
-            color="primary"
-            onClick={sendMessage}
-            className={classes.sendButton}
-            disabled={loading || demoUser}
-          >
-            {success ? <CheckIcon color="primary" /> : 'Send'}
-            {loading && <CircularProgress size={24} className={classes.buttonLoading} />}
-          </Button>
-        </div>
-      </DialogActions>
+      <form onSubmit={event => sendMessage(event)}>
+        <DialogContent>
+          <TextField fullWidth required
+            variant="outlined" label="Subject"
+            onChange={changeSubject}
+            value={subject}
+            className={classes.inputBox}
+          />
+          <TextField fullWidth required
+            variant="outlined" label="Message"
+            onChange={changeMessage}
+            multiline rows={4}
+            value={message}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button color="secondary" onClick={event => cancelMessage(event)}>Cancel</Button>
+          <div className={classes.wrapper}>
+            <Button
+              color="primary"
+              type="submit"
+              className={classes.sendButton}
+              disabled={loading || demoUser}
+            >
+              {success ? <CheckIcon color="primary" /> : 'Send'}
+              {loading && <CircularProgress size={24} className={classes.buttonLoading} />}
+            </Button>
+          </div>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 }
