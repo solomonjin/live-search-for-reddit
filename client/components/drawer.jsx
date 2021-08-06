@@ -5,7 +5,6 @@ import {
 } from '@material-ui/core';
 import RedditLogo from './reddit-logo';
 import HomeIcon from '@material-ui/icons/Home';
-import InboxIcon from '@material-ui/icons/Inbox';
 import SearchIcon from '@material-ui/icons/Search';
 import LoginIcon from '@material-ui/icons/Login';
 import LogoutIcon from '@material-ui/icons/Logout';
@@ -67,11 +66,6 @@ export default function MyDrawer(props) {
       <ListItem button component={Link} to='/' onClick={handleClick}>
         <ListItemIcon><HomeIcon /></ListItemIcon>
         <ListItemText primary="Home" />
-      </ListItem>
-      <Divider />
-      <ListItem button>
-        <ListItemIcon><InboxIcon /></ListItemIcon>
-        <ListItemText primary="Inbox" />
       </ListItem>
       <Divider />
       <ListItem button component={Link} to='/search' onClick={handleClick}>
