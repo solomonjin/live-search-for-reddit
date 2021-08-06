@@ -12,11 +12,12 @@ import MessageDialog from './message-dialog';
 import CancelDialog from './cancel-dialog';
 import ClearAllDialog from './clear-all-dialog';
 import VolumeControl from './volume';
+import NetworkAlert from './network-error';
 
 export {
   MyDrawer, MyPaper, Navbar, RedditLogo,
   SearchForm, SearchMessage, SignInButton,
   Submission, SubmissionBody, CommentDialog,
   MessageDialog, CancelDialog, ClearAllDialog,
-  VolumeControl
+  VolumeControl, NetworkAlert
 };

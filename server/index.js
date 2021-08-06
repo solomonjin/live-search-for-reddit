@@ -263,7 +263,7 @@ app.post('/api/message', authorizationMiddleware, (req, res, next) => {
 
   req.user.requester.composeMessage(messageParams)
     .then(userMessage => {
-      res.status(201).json(userMessage);
+      res.status(201).json({ success: true });
     })
     .catch(err => next(err));
 });

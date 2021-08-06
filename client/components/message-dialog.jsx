@@ -28,7 +28,7 @@ export default function MessageDialog(props) {
   const [subject, setSubject] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const { user } = useContext(AppContext);
+  const { user, showError } = useContext(AppContext);
   const classes = useStyles();
 
   const changeMessage = event => {
@@ -65,6 +65,12 @@ export default function MessageDialog(props) {
     fetch('/api/message', req)
       .then(res => res.json())
       .then(message => {
+        console.log(message);
+        if (!message.success) {
+          setSuccess(false);
+          showError();
+          return;
+        }
         setLoading(false);
         setSuccess(true);
         setTimeout(() => {
