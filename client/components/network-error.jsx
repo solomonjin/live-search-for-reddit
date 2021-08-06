@@ -4,8 +4,13 @@ import { Snackbar } from '@material-ui/core';
 
 export default function NetworkAlert(props) {
   return (
-    <Snackbar open={props.open}>
-      <Alert severity="error">
+    <Snackbar open={props.open}
+      autoHideDuration={props.autoHideDuration}
+    >
+      <Alert
+        severity="error"
+        onClose={props.onClose}
+      >
         <AlertTitle>Network Error Occured</AlertTitle>
         Please try again later.
       </Alert>
