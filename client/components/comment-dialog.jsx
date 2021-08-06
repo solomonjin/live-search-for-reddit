@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Dialog, DialogTitle, DialogContent,
   DialogActions, TextField, Button, CircularProgress
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import CheckIcon from '@material-ui/icons/Check';
+import AppContext from '../lib/app-context';
 
 const useStyles = makeStyles({
   wrapper: {
@@ -23,20 +24,23 @@ export default function CommentDialog(props) {
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { showError } = useContext(AppContext);
   const classes = useStyles();
 
   const changeComment = event => {
     setComment(event.target.value);
   };
 
-  const cancelComment = () => {
+  const cancelComment = event => {
+    event.preventDefault();
     props.onClose();
     setComment('');
     setLoading(false);
     setSuccess(false);
   };
 
-  const sendComment = () => {
+  const sendComment = event => {
+    event.preventDefault();
     if (!loading) {
       setSuccess(false);
       setLoading(true);
@@ -53,6 +57,12 @@ export default function CommentDialog(props) {
     fetch('/api/comment', req)
       .then(res => res.json())
       .then(comment => {
+        if (!comment.success) {
+          setSuccess(false);
+          setLoading(false);
+          showError();
+          return;
+        }
         setLoading(false);
         setSuccess(true);
         setTimeout(() => {
@@ -61,7 +71,10 @@ export default function CommentDialog(props) {
           setComment('');
         }, 1000);
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        console.error(err);
+        showError();
+      });
   };
 
   return (
@@ -73,28 +86,30 @@ export default function CommentDialog(props) {
       PaperProps={{ style: { borderRadius: 8 } }}
     >
       <DialogTitle align="center">Post Comment</DialogTitle>
-      <DialogContent>
-        <TextField fullWidth required
-          variant="outlined" label="Comment"
-          onChange={changeComment}
-          multiline rows={4}
-          value={comment}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button color="secondary" onClick={cancelComment}>Cancel</Button>
-        <div className={classes.wrapper}>
-          <Button
-            color="primary"
-            onClick={sendComment}
-            className={classes.sendButton}
-            disabled={loading}
-          >
-            {success ? <CheckIcon color="primary" /> : 'Send'}
-            {loading && <CircularProgress size={24} className={classes.buttonLoading} />}
-          </Button>
-        </div>
-      </DialogActions>
+      <form onSubmit={event => sendComment(event)}>
+        <DialogContent>
+          <TextField fullWidth required
+            variant="outlined" label="Comment"
+            onChange={changeComment}
+            multiline rows={4}
+            value={comment}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button color="secondary" onClick={event => cancelComment(event)}>Cancel</Button>
+          <div className={classes.wrapper}>
+            <Button
+              color="primary"
+              className={classes.sendButton}
+              disabled={loading}
+              type="submit"
+            >
+              {success ? <CheckIcon color="primary" /> : 'Send'}
+              {loading && <CircularProgress size={24} className={classes.buttonLoading} />}
+            </Button>
+          </div>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 }

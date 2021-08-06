@@ -6,6 +6,7 @@ export default function NetworkAlert(props) {
   return (
     <Snackbar open={props.open}
       autoHideDuration={props.autoHideDuration}
+      onClose={props.onClose}
     >
       <Alert
         severity="error"
