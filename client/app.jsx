@@ -77,7 +77,7 @@ export default function App(props) {
   useEffect(() => {
     if (searchResults.length === 0) return;
 
-    const defaultTitle = 'Keyword Finder for Reddit';
+    const defaultTitle = 'Live Search for Reddit';
 
     const titleInterval = setInterval(() => {
       document.title = document.title === 'Result Found!'
