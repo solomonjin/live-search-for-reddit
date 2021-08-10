@@ -2,8 +2,8 @@
 
 A full-stack web application for users who want to [perform live searches on Reddit](https://live-search-for-reddit.herokuapp.com/) and receive real-time updates on submission posts.
 
-![searching](https://i.imgur.com/IB0PwXj.gif)
-![comment](https://i.imgur.com/Dk4Vc1X.gif)
+![searching](https://i.imgur.com/NhLsxAH.gif)
+![comment](https://i.imgur.com/h23Ph01.gif)
 
 Motive
 -------
