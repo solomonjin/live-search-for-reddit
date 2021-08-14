@@ -15,7 +15,7 @@ Technologies
 - Client communicates with the server via **fetch** requests and websocket connections using **Socket.io**
 - Server is setup using **Node.js** and **Express** along with **Socket.io**
 - Authentication and authorization performed via **OAuth** and data stored in cookies using **JSON Web Tokens**
-- **PostgresQL** database to store users' data and search terms
+- **PostgreSQL** database to store users' data and search terms
 
 Features 
 --------
@@ -43,7 +43,7 @@ Features
 System Requirements
 -------------------
 - Node.js
-- PostgresQL
+- PostgreSQL
 
 Get Started
 -----------
